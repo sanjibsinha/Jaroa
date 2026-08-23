@@ -1,0 +1,92 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # =========================================================
+    # 1. Force HTTPS for the main domain
+    # =========================================================
+    RewriteCond %{HTTP_HOST} ^(www\.)?sanjibsinha\.in$ [NC]
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://sanjibsinha.in%{REQUEST_URI} [R=301,L]
+
+
+    # =========================================================
+    # 2. Do not rewrite anything inside the WordPress dashboard
+    # =========================================================
+    RewriteRule ^dashboard/ - [L]
+
+
+    # =========================================================
+    # 3. Redirect old .php URLs to clean URLs
+    # =========================================================
+    RewriteCond %{THE_REQUEST} \s/+about\.php(?:[?\s]) [NC]
+    RewriteRule ^about\.php$ /about [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+contact\.php(?:[?\s]) [NC]
+    RewriteRule ^contact\.php$ /contact [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+privacy-policy\.php(?:[?\s]) [NC]
+    RewriteRule ^privacy-policy\.php$ /privacy-policy [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+terms\.php(?:[?\s]) [NC]
+    RewriteRule ^terms\.php$ /terms [R=301,L]
+
+
+    # =========================================================
+    # 4. CMS Pages from WordPress
+    # =========================================================
+    RewriteRule ^about/?$ page.php?slug=about [L,QSA]
+    RewriteRule ^contact/?$ page.php?slug=contact [L,QSA]
+    RewriteRule ^privacy-policy/?$ page.php?slug=privacy-policy [L,QSA]
+    RewriteRule ^terms/?$ page.php?slug=terms [L,QSA]
+
+
+    # =========================================================
+    # 5. Article URLs
+    # =========================================================
+    RewriteRule ^articles/([^/]+)/?$ article.php?slug=$1 [L,QSA]
+
+
+    # =========================================================
+    # 6. Application URLs
+    # =========================================================
+    RewriteRule ^applications/([^/]+)/?$ application.php?slug=$1 [L,QSA]
+
+
+    # =========================================================
+    # 7. Do not rewrite the physical index.php
+    # =========================================================
+    RewriteRule ^index\.php$ - [L]
+
+
+    # =========================================================
+    # 8. Existing files and directories are served normally
+    # =========================================================
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+
+    # =========================================================
+    # 9. Everything else goes to the PHP frontend
+    # =========================================================
+    RewriteRule ^ /index.php [L]
+
+</IfModule>
+
+
+# =============================================================
+# Existing frontend fallback
+# =============================================================
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]

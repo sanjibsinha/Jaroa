@@ -1,0 +1,13 @@
+{
+    "name": "sanjibsinha/headless-php-frontend",
+    "description": "A lightweight PHP frontend for a headless WordPress application.",
+    "type": "project",
+    "require": {
+        "php": "^8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}

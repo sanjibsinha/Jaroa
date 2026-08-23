@@ -1,0 +1,16 @@
+{
+  "name": "fullstack/fullstack-app",
+  "description": "Backend application layer for the Full Stack App.",
+  "type": "wordpress-plugin",
+  "require-dev": {
+    "wp-cli/i18n-command": "^2"
+  },
+  "autoload": {
+    "psr-4": {
+      "FullStack\\App\\": "app/"
+    }
+  },
+  "scripts": {
+    "makepot": "wp i18n make-pot ."
+  }
+}

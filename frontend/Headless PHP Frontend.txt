@@ -1,0 +1,1619 @@
+# Headless PHP Frontend: Installation and Usage Manual
+
+## Build a Fast Headless Website With PHP, HTML, CSS, JavaScript and WordPress
+
+In the previous manual, we installed the **Full Stack App** WordPress plugin and turned a fresh WordPress installation into a structured headless backend.
+
+Now we will use the other half of the project:
+
+**the PHP frontend package.**
+
+This package provides a lightweight public-facing website that can sit in front of the WordPress backend.
+
+The basic architecture is:
+
+```text id="8xw8k2"
+                    WordPress
+                 Headless Backend
+                        │
+                        │ API / Data
+                        ▼
+              ┌─────────────────────┐
+              │   PHP Frontend      │
+              │                     │
+              │   PHP               │
+              │   HTML              │
+              │   CSS               │
+              │   JavaScript        │
+              └──────────┬──────────┘
+                         │
+                         ▼
+                      Browser
+```
+
+The purpose of this package is not to give you another WordPress theme.
+
+It gives you a **separate PHP application layer** that can be customized and used as the public website.
+
+---
+
+# 1. What This Package Is
+
+The frontend package is a lightweight PHP website.
+
+It provides the basic building blocks for:
+
+* a homepage
+* article listings
+* individual articles
+* application listings
+* application detail pages
+* CMS pages
+* navigation
+* pagination
+* responsive design
+* dark mode
+* application downloads
+* basic SEO metadata
+* shared header and footer
+
+The technology stack is intentionally small:
+
+```text id="m4z3xk"
+PHP
+HTML
+CSS
+JavaScript
+WordPress
+```
+
+There is no requirement for React, Vue, Angular, Next.js or another large frontend framework.
+
+The browser ultimately receives ordinary HTML.
+
+---
+
+# 2. What You Need
+
+For local development, we recommend:
+
+```text id="2o5t9a"
+Docker
+DDEV
+A working WordPress backend
+PHP
+A web browser
+A terminal
+```
+
+If you followed the previous backend manual, you already have most of what you need.
+
+The backend should already provide:
+
+```text id="j0h3f1"
+WordPress
++
+Full Stack App Plugin
++
+REST API
+```
+
+The frontend will sit alongside it.
+
+---
+
+# 3. The Two-Part Project
+
+A complete headless installation can be organized like this:
+
+```text id="m31t6c"
+my-headless-project/
+│
+├── backend/
+│   └── WordPress
+│       └── Full Stack App
+│
+└── frontend/
+    ├── index.php
+    ├── article.php
+    ├── application.php
+    ├── page.php
+    ├── config.php
+    ├── includes/
+    └── assets/
+```
+
+The backend and frontend can eventually live on separate domains or subdomains.
+
+For example:
+
+```text id="f7v8x9"
+cms.example.com
+    ↓
+WordPress backend
+
+www.example.com
+    ↓
+PHP frontend
+```
+
+During development, however, keeping everything local is considerably easier.
+
+---
+
+# 4. Download the Frontend Package
+
+The reusable frontend package is distributed as:
+
+```text id="r9a1v2"
+frontend.zip
+```
+
+Extract the archive.
+
+You should see the frontend application files.
+
+The important structure is:
+
+```text id="n4c6b8"
+frontend/
+│
+├── index.php
+├── article.php
+├── application.php
+├── page.php
+├── config.php
+│
+├── includes/
+│   ├── header.php
+│   └── footer.php
+│
+└── assets/
+    ├── style.css
+    └── script.js
+```
+
+This is the application we are going to customize.
+
+---
+
+# 5. Where Should the Frontend Live?
+
+There are several possible deployment models.
+
+### Model A: Same Server
+
+```text id="8l2m4n"
+Server
+│
+├── WordPress
+│
+└── PHP Frontend
+```
+
+This is the simplest deployment model.
+
+### Model B: Separate Subdomains
+
+```text id="z5c7d9"
+cms.example.com
+       │
+       ▼
+WordPress
+
+www.example.com
+       │
+       ▼
+PHP Frontend
+```
+
+This provides stronger physical separation.
+
+### Model C: Separate Servers
+
+```text id="h2j4k6"
+Server A
+WordPress
+    │
+    │ HTTPS / JSON
+    ▼
+Server B
+PHP Frontend
+```
+
+This is also possible because the frontend can communicate with the backend over HTTP.
+
+For learning and local development, we will start with the simplest arrangement.
+
+---
+
+# 6. Important Architecture Note
+
+The frontend package is designed around the headless architecture we developed.
+
+The backend provides:
+
+```text id="0x2n5v"
+/wp-json/fullstack/v1/
+```
+
+and the frontend consumes the backend's data.
+
+The current reference implementation also has the ability to bootstrap WordPress directly through `wp-load.php`.
+
+That gives us a useful hybrid development model:
+
+```text id="4s8v2p"
+PHP Frontend
+     │
+     ├── WordPress bootstrap
+     │
+     └── API configuration
+             │
+             ▼
+         WordPress
+```
+
+The longer-term architecture can be completely separated:
+
+```text id="8h3j7k"
+PHP Frontend
+     │
+     │ HTTPS / JSON
+     ▼
+WordPress REST API
+```
+
+The important point is that the frontend is not dependent on a WordPress theme.
+
+It owns the public presentation.
+
+---
+
+# 7. Configure the Frontend
+
+The first file you should inspect is:
+
+```text id="z8m3q1"
+config.php
+```
+
+This is where environment-specific configuration belongs.
+
+For example, the API URL can be configured as:
+
+```php id="c5f7n9"
+define(
+    'WP_API_URL',
+    'https://example.com/wp-json/fullstack/v1/apps'
+);
+```
+
+Change the URL so that it points to your own WordPress installation.
+
+For example, during local development:
+
+```php id="p7r2x4"
+define(
+    'WP_API_URL',
+    'https://my-headless-site.ddev.site/wp-json/fullstack/v1/apps'
+);
+```
+
+Do not leave the example production URL in place.
+
+---
+
+# 8. Why Configuration Matters
+
+The frontend should not contain your backend URL in dozens of different files.
+
+Instead, configuration should be centralized.
+
+Conceptually:
+
+```text id="s6u9w2"
+             config.php
+                  │
+                  ▼
+        Backend configuration
+                  │
+        ┌─────────┴─────────┐
+        ▼                   ▼
+    Frontend             API calls
+```
+
+If you later move the WordPress backend from:
+
+```text id="r4k8x2"
+cms.example.com
+```
+
+to:
+
+```text id="backend.example.com"
+```
+
+you should be able to change the relevant configuration rather than search through the entire frontend codebase.
+
+---
+
+# 9. Configure the Local WordPress Path
+
+The reference frontend also uses WordPress directly in several entry points.
+
+You may therefore see code similar to:
+
+```php id="u2v5x7"
+define('WP_USE_THEMES', false);
+
+require_once __DIR__ . '/dashboard/wp-load.php';
+```
+
+This assumes that WordPress exists at:
+
+```text id="b7m9q3"
+dashboard/
+```
+
+relative to the frontend application.
+
+If your WordPress installation is somewhere else, change the path accordingly.
+
+For example:
+
+```php id="k1n4r6"
+require_once __DIR__ . '/../backend/wordpress/wp-load.php';
+```
+
+The exact path depends on your project layout.
+
+The important thing is that PHP must be able to locate WordPress's:
+
+```text id="q5w8e2"
+wp-load.php
+```
+
+---
+
+# 10. A Simple Local Project Layout
+
+One convenient development layout is:
+
+```text id="v3c6x8"
+my-headless-project/
+│
+├── backend/
+│   └── wordpress/
+│       ├── wp-admin/
+│       ├── wp-content/
+│       ├── wp-includes/
+│       └── wp-load.php
+│
+└── frontend/
+    ├── index.php
+    ├── article.php
+    ├── application.php
+    ├── page.php
+    ├── config.php
+    ├── includes/
+    └── assets/
+```
+
+In this arrangement, the frontend can bootstrap WordPress using:
+
+```php id="y7p2m5"
+require_once __DIR__ . '/../backend/wordpress/wp-load.php';
+```
+
+This is convenient for local development because both halves of the application remain inside one project.
+
+---
+
+# 11. Running the Frontend With DDEV
+
+If you want DDEV to serve the frontend directly, create a DDEV project around the frontend directory.
+
+For example:
+
+```bash id="g4j8k2"
+cd frontend
+ddev config
+```
+
+Then choose an appropriate PHP project configuration.
+
+Start it:
+
+```bash id="p8r3v5"
+ddev start
+```
+
+The exact DDEV configuration can vary depending on whether the frontend is running independently or as part of the same project as WordPress.
+
+The key requirement is simple:
+
+> The PHP frontend must be executed by a PHP-capable web server.
+
+---
+
+# 12. The Frontend Entry Point
+
+The main entry point is:
+
+```text id="s3v7x9"
+index.php
+```
+
+This is the homepage.
+
+It determines which collection should be displayed.
+
+The current implementation supports:
+
+```text id="x6m2q8"
+Applications
+Articles
+```
+
+The selected tab is read from the query string:
+
+```php id="w9k4p1"
+$tab = $_GET['tab'] ?? 'apps';
+```
+
+So:
+
+```text id="q2r5t7"
+/?tab=apps
+```
+
+displays applications.
+
+And:
+
+```text id="m8n3v6"
+/?tab=posts
+```
+
+displays articles.
+
+---
+
+# 13. The Homepage Application Listing
+
+When Applications are selected, the frontend queries:
+
+```text id="e4x7z1"
+app_repository
+```
+
+The basic query is:
+
+```php id="k6p2s8"
+$query_args = [
+    'post_type'      => 'app_repository',
+    'post_status'    => 'publish',
+    'posts_per_page' => $per_page,
+    'paged'          => $paged,
+];
+```
+
+This is the custom post type created by the Full Stack App backend.
+
+The frontend then turns each WordPress application into an application card.
+
+---
+
+# 14. Application Cards
+
+Each application card can display:
+
+```text id="u9w4y2"
+Application title
+Version
+Operating system
+Description
+Updated date
+Read
+Download
+```
+
+The version comes from application metadata:
+
+```php id="c3n7m5"
+$version = get_post_meta(
+    get_the_ID(),
+    'app_version',
+    true
+) ?: '1.0.0';
+```
+
+The operating system is retrieved similarly:
+
+```php id="r8k2v6"
+$os = get_post_meta(
+    get_the_ID(),
+    'app_os',
+    true
+) ?: 'Linux / Ubuntu';
+```
+
+The downloadable file is resolved from its attachment ID.
+
+The frontend can therefore display a complete application card without maintaining a separate application database.
+
+---
+
+# 15. The Articles Tab
+
+Switching to:
+
+```text id="h5j8q2"
+/?tab=posts
+```
+
+causes the frontend to query ordinary WordPress posts.
+
+The query changes to:
+
+```php id="p4x7m1"
+'post_type' => 'post'
+```
+
+The page can then display:
+
+```text id="q9w3s6"
+Article title
+Excerpt
+Publication date
+Read Article
+```
+
+The same pagination system can be used for both applications and articles.
+
+---
+
+# 16. Pagination
+
+The frontend displays six items per page:
+
+```php id="n6r2v8"
+$per_page = 6;
+```
+
+The current page is determined from:
+
+```php id="x5k9p3"
+$paged = isset($_GET['page'])
+    ? max(1, intval($_GET['page']))
+    : 1;
+```
+
+If more pages exist, the frontend generates pagination links.
+
+For example:
+
+```text id="t3y7u1"
+1  2  3  4
+```
+
+A second page of applications may therefore be:
+
+```text id="m8c4z6"
+/?tab=apps&page=2
+```
+
+while the second page of articles is:
+
+```text id="d2f5h9"
+/?tab=posts&page=2
+```
+
+The selected tab is preserved.
+
+---
+
+# 17. Clean Article URLs
+
+The frontend uses clean public URLs.
+
+An article can be accessed through:
+
+```text id="j6r9x3"
+/articles/my-first-article
+```
+
+Internally, the request is routed to:
+
+```text id="b4n8q2"
+article.php
+```
+
+with the article slug made available to the PHP application.
+
+The visitor does not need to know how the PHP files are organized.
+
+That is the difference between an implementation path and a public URL.
+
+---
+
+# 18. Article Pages
+
+The article entry point is:
+
+```text id="w5k7p1"
+article.php
+```
+
+It retrieves the requested slug:
+
+```php id="y8m3r6"
+$slug = isset($_GET['slug'])
+    ? sanitize_title(wp_unslash($_GET['slug']))
+    : '';
+```
+
+It then queries the published post.
+
+If the article exists, the frontend renders:
+
+```text id="u4x9c2"
+Title
+Metadata
+Featured image
+Content
+```
+
+If the article does not exist, the frontend returns a proper 404 response.
+
+---
+
+# 19. Application Detail Pages
+
+Applications use the same pattern.
+
+The public URL becomes:
+
+```text id="k2v7n5"
+/applications/my-application
+```
+
+The frontend retrieves the slug and queries the:
+
+```text id="z8r4x1"
+app_repository
+```
+
+post type.
+
+The resulting page can display:
+
+```text id="p6m9s3"
+Application title
+Version
+Operating system
+Description
+Application content
+Download button
+```
+
+This gives the application repository a proper public-facing detail page.
+
+---
+
+# 20. CMS Pages
+
+The frontend also supports ordinary WordPress pages.
+
+Examples include:
+
+```text id="q5t8w2"
+/about
+/contact
+/privacy-policy
+/terms
+```
+
+The `page.php` entry point handles these pages.
+
+The current frontend explicitly restricts the allowed page slugs.
+
+This is useful because the frontend should not blindly treat every possible URL as a valid public page.
+
+---
+
+# 21. Shared Header
+
+The common site header is located at:
+
+```text id="f7x2m9"
+includes/header.php
+```
+
+Instead of repeating the HTML document structure in every PHP file, each page can include the shared header.
+
+The header is responsible for things such as:
+
+```text id="s4n8c1"
+DOCTYPE
+HTML head
+Title
+Meta description
+Canonical URL
+Stylesheet
+Navigation
+Theme toggle
+```
+
+This means a change to the global navigation can be made in one place.
+
+---
+
+# 22. Shared Footer
+
+The footer lives at:
+
+```text id="v3q6y8"
+includes/footer.php
+```
+
+It provides the common closing structure:
+
+```text id="k9m2r5"
+Footer
+Copyright
+Legal links
+JavaScript
+Closing HTML
+```
+
+Again, the goal is to keep repeated markup out of individual pages.
+
+---
+
+# 23. Page Metadata
+
+The frontend generates metadata server-side.
+
+For an article, the title can become:
+
+```html id="u8p3r7"
+<title>Article Title</title>
+```
+
+The description is derived from the article content or excerpt.
+
+The canonical URL becomes something similar to:
+
+```text id="c6x9m2"
+/articles/my-first-article
+```
+
+This gives the frontend control over the public HTML document and basic SEO structure.
+
+---
+
+# 24. Styling the Frontend
+
+The main stylesheet is:
+
+```text id="j4n7s1"
+assets/style.css
+```
+
+It contains the visual system for the application.
+
+The stylesheet defines CSS custom properties such as:
+
+```css id="r8w2m6"
+:root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --card-bg: #ffffff;
+    --primary: #2563eb;
+    --border: #e2e8f0;
+}
+```
+
+These variables make customization easier.
+
+For example, changing:
+
+```text id="x5z9q3"
+--primary
+```
+
+changes the main accent color throughout the application.
+
+---
+
+# 25. Customizing the Brand
+
+The frontend package is intended to be customized.
+
+You can change:
+
+```text id="n7v2k5"
+Site name
+Logo
+Navigation
+Colors
+Typography
+Card design
+Footer
+Buttons
+Spacing
+```
+
+Most visual customization can be done in:
+
+```text id="s4m8x2"
+assets/style.css
+```
+
+while site-wide HTML changes can be made in:
+
+```text id="r6p1y9"
+includes/header.php
+includes/footer.php
+```
+
+This gives a developer a clear place to start.
+
+---
+
+# 26. Responsive Layout
+
+The frontend uses CSS Grid and media queries rather than a large CSS framework.
+
+The application grid can use:
+
+```css id="q2w7m4"
+.app-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns:
+        repeat(auto-fill, minmax(320px, 1fr));
+}
+```
+
+On smaller screens, the grid can collapse to one column.
+
+This gives us:
+
+```text id="f9k3n6"
+Desktop
+┌────────┐ ┌────────┐ ┌────────┐
+│  App   │ │  App   │ │  App   │
+└────────┘ └────────┘ └────────┘
+
+Mobile
+┌─────────────────┐
+│      App        │
+└─────────────────┘
+┌─────────────────┐
+│      App        │
+└─────────────────┘
+```
+
+No JavaScript layout library is required.
+
+---
+
+# 27. Dark Mode
+
+The frontend includes a small JavaScript enhancement for dark mode.
+
+The browser stores the user's preference in:
+
+```javascript id="c5r8x2"
+localStorage
+```
+
+The JavaScript applies:
+
+```text id="m7n2v4"
+dark-theme
+```
+
+to the page.
+
+The CSS then changes the variables.
+
+For example:
+
+```css id="p9k3w6"
+body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --border: #334155;
+}
+```
+
+The important design principle is that JavaScript remembers the choice while CSS controls the appearance.
+
+---
+
+# 28. JavaScript Enhancements
+
+The main JavaScript file is:
+
+```text id="x4m7q1"
+assets/script.js
+```
+
+The JavaScript layer is intentionally small.
+
+It handles things such as:
+
+```text id="s8n2v5"
+Theme preference
+Theme switching
+Download notification
+Small interface enhancements
+```
+
+The primary content does not depend on JavaScript.
+
+That means an article can still be rendered as HTML even if JavaScript is unavailable.
+
+This is an example of progressive enhancement.
+
+---
+
+# 29. Download Notifications
+
+When an application download is triggered, JavaScript can display a small notification:
+
+```text id="r5y9k3"
+Downloading My Application...
+```
+
+The actual download does not depend on JavaScript.
+
+The browser follows the download URL normally.
+
+JavaScript simply improves the user experience.
+
+This distinction is important.
+
+The frontend should not turn simple browser functionality into a complicated JavaScript subsystem.
+
+---
+
+# 30. Security and Escaping
+
+When customizing the frontend, continue using the appropriate WordPress escaping functions.
+
+For ordinary text:
+
+```php id="m4x8q2"
+esc_html()
+```
+
+For URLs:
+
+```php id="k7p3n9"
+esc_url()
+```
+
+For HTML attributes:
+
+```php id="v5r2w8"
+esc_attr()
+```
+
+When reading query-string values, sanitize them appropriately.
+
+For example:
+
+```php id="j9c4m6"
+sanitize_title(
+    wp_unslash($_GET['slug'])
+)
+```
+
+Do not remove these protections simply because the frontend is a custom PHP application.
+
+The frontend is still receiving and displaying data.
+
+---
+
+# 31. Changing the Site Name
+
+The site name is normally defined in the shared presentation layer.
+
+Open:
+
+```text id="z2f7m4"
+includes/header.php
+```
+
+and locate the site branding.
+
+Replace the existing name with your own.
+
+For example:
+
+```text id="p6x9n1"
+My Application
+```
+
+You can also replace the navigation items.
+
+This is one of the first customizations you should make when creating a new site from the package.
+
+---
+
+# 32. Changing Navigation
+
+The navigation belongs in:
+
+```text id="v4m8q2"
+includes/header.php
+```
+
+You can add links such as:
+
+```text id="n7r2x5"
+Home
+Articles
+Applications
+About
+Contact
+```
+
+If your application needs different sections, change the navigation accordingly.
+
+The navigation is presentation-layer code.
+
+The WordPress backend does not need to know how you choose to arrange those links.
+
+---
+
+# 33. Creating a New Page Type
+
+Suppose you want to add a new public page type.
+
+A simple approach is to create another PHP entry point:
+
+```text id="k5p9m3"
+documentation.php
+```
+
+Then add the appropriate routing rule.
+
+The page can reuse:
+
+```php id="x8v2r6"
+includes/header.php
+```
+
+and:
+
+```php id="q4m7n1"
+includes/footer.php
+```
+
+This is one of the advantages of the simple PHP architecture.
+
+You don't need to understand an enormous framework before adding a page.
+
+You can follow the existing pattern.
+
+---
+
+# 34. Creating New Components
+
+If a piece of markup is repeated frequently, extract it.
+
+For example:
+
+```text id="s6n2w8"
+includes/
+    header.php
+    footer.php
+    application-card.php
+    article-card.php
+```
+
+Then individual pages can include those components.
+
+As the application grows, this can evolve into a more formal component system.
+
+But we don't need to build that abstraction until repetition actually justifies it.
+
+---
+
+# 35. Changing the Number of Items Per Page
+
+The current homepage uses:
+
+```php id="p3v8m2"
+$per_page = 6;
+```
+
+If you want eight items:
+
+```php id="f7n4x9"
+$per_page = 8;
+```
+
+If you want twelve:
+
+```php id="c2m6q1"
+$per_page = 12;
+```
+
+The same pagination mechanism will continue to work.
+
+---
+
+# 36. Connecting to a Remote WordPress Backend
+
+One of the most interesting uses of the package is separating the frontend and backend completely.
+
+For example:
+
+```text id="j8r3x5"
+Frontend
+https://www.example.com
+       │
+       │ HTTPS
+       ▼
+Backend
+https://cms.example.com
+```
+
+The frontend can be configured to communicate with the remote backend API.
+
+The backend URL should use HTTPS:
+
+```text id="v6n2q8"
+https://cms.example.com/wp-json/fullstack/v1/
+```
+
+The frontend then becomes independent of the physical location of the WordPress installation.
+
+---
+
+# 37. CORS When Frontend and Backend Are Separate
+
+When the frontend and backend run on different origins, the browser enforces CORS rules.
+
+The backend therefore needs to allow the frontend origin.
+
+For example:
+
+```text id="q5m9x2"
+Frontend:
+https://www.example.com
+
+Backend:
+https://cms.example.com
+```
+
+The backend must be configured to allow requests from:
+
+```text id="r8v3n6"
+https://www.example.com
+```
+
+Do not use a wildcard origin in production unless you have a specific reason to do so.
+
+The allowed origins should match your actual deployment architecture.
+
+---
+
+# 38. Running the Frontend Without WordPress on the Same Host
+
+A completely separated deployment can look like:
+
+```text id="m2k7p4"
+SERVER 1
+WordPress
+Full Stack App
+REST API
+        │
+        │ HTTPS
+        ▼
+SERVER 2
+PHP Frontend
+```
+
+This is one of the strongest arguments for building the application around an API.
+
+The two systems can evolve independently.
+
+You can replace the frontend without replacing the CMS.
+
+You can improve the backend without redesigning the public website.
+
+---
+
+# 39. Testing the Frontend
+
+Before considering the frontend ready, test the following:
+
+```text id="w6p3n8"
+Homepage
+Articles tab
+Applications tab
+Pagination
+Article detail
+Application detail
+CMS pages
+404 pages
+Navigation
+Mobile layout
+Dark mode
+Download buttons
+```
+
+Also test:
+
+```text id="f9x2m5"
+No articles
+No applications
+Missing article
+Missing application
+Long article title
+Long application description
+Missing featured image
+Missing download file
+```
+
+A reusable frontend should behave sensibly when content is incomplete.
+
+---
+
+# 40. Common Problems
+
+## The frontend shows a WordPress error
+
+Check that the `wp-load.php` path is correct.
+
+For example:
+
+```php id="c7m2r9"
+require_once __DIR__ . '/../backend/wordpress/wp-load.php';
+```
+
+The path must match your actual project structure.
+
+---
+
+## The API URL is wrong
+
+Check:
+
+```text id="v4n8x1"
+config.php
+```
+
+and verify that the backend URL points to the WordPress installation running the Full Stack App plugin.
+
+---
+
+## Applications are missing
+
+Check:
+
+1. The Full Stack App plugin is active.
+2. The `app_repository` content exists.
+3. The applications are published.
+4. The application metadata is present.
+5. The frontend is pointing to the correct backend.
+
+---
+
+## Articles are missing
+
+Check:
+
+1. WordPress posts exist.
+2. They are published.
+3. The frontend is querying the correct WordPress installation.
+4. The WordPress bootstrap path is correct.
+
+---
+
+## Images are missing
+
+Check:
+
+* the WordPress media attachment exists
+* the image URL is valid
+* the browser can access the backend domain
+* HTTPS is configured correctly
+* CORS or mixed-content restrictions are not blocking the resource
+
+---
+
+# 41. Recommended Development Workflow
+
+Once the project is running, a good development cycle is:
+
+```text id="h8m4x2"
+1. Edit PHP
+      ↓
+2. Refresh browser
+      ↓
+3. Inspect HTML
+      ↓
+4. Check WordPress/API data
+      ↓
+5. Edit CSS/JavaScript
+      ↓
+6. Test desktop
+      ↓
+7. Test mobile
+```
+
+When debugging content problems, test the backend independently.
+
+For example:
+
+```text id="r3n7v5"
+/wp-json/fullstack/v1/posts
+```
+
+If the API is wrong, fix the backend.
+
+If the API is correct but the page is wrong, fix the frontend.
+
+This separation can save a surprising amount of debugging time.
+
+---
+
+# 42. Deployment
+
+Once development is complete, the frontend can be deployed to a PHP-capable server.
+
+The basic deployment process is:
+
+```text id="k6p2x9"
+Upload frontend files
+        ↓
+Configure PHP
+        ↓
+Configure WordPress path/API
+        ↓
+Configure domain
+        ↓
+Enable HTTPS
+        ↓
+Test public URLs
+```
+
+If the frontend and backend are on separate servers, make sure the backend API is publicly reachable from the frontend's environment and that the appropriate CORS configuration is in place.
+
+---
+
+# 43. What Should Be Customized?
+
+When using this package for a new project, I recommend changing the following first:
+
+### Identity
+
+```text id="v8m3q6"
+Site name
+Logo
+Favicon
+```
+
+### Navigation
+
+```text id="x2n7r4"
+Menu items
+URLs
+```
+
+### Visual design
+
+```text id="p5k9w1"
+Colors
+Typography
+Spacing
+Cards
+Buttons
+```
+
+### Content types
+
+```text id="c7m2x8"
+Articles
+Applications
+Pages
+```
+
+### URLs
+
+```text id="n4r8v3"
+/articles/...
+/applications/...
+```
+
+### Metadata
+
+```text id="q6x1m9"
+Title
+Description
+Canonical URLs
+```
+
+The core rendering pattern can remain intact.
+
+---
+
+# 44. The Frontend as a Reusable Starting Point
+
+The important idea behind this package is not that every website must look exactly like the reference implementation.
+
+It should not.
+
+The package is intended to provide a starting point.
+
+Think of it as:
+
+```text id="w3p7n2"
+Frontend Foundation
+        │
+        ├── Layout
+        ├── Routing pattern
+        ├── Templates
+        ├── API integration
+        ├── Responsive CSS
+        └── JavaScript foundation
+                │
+                ▼
+        Your Application
+```
+
+You customize the foundation for the project you are building.
+
+---
+
+# 45. The Complete Headless System
+
+Once both packages are installed, the architecture becomes:
+
+```text id="s8m2q5"
+                       VISITOR
+                          │
+                          ▼
+                   ┌─────────────┐
+                   │   Browser   │
+                   └──────┬──────┘
+                          │
+                          ▼
+                   ┌─────────────┐
+                   │ PHP Frontend│
+                   │             │
+                   │ PHP         │
+                   │ HTML        │
+                   │ CSS         │
+                   │ JavaScript  │
+                   └──────┬──────┘
+                          │
+                          │ API
+                          ▼
+                   ┌─────────────┐
+                   │ WordPress   │
+                   │ Backend     │
+                   │             │
+                   │ Full Stack  │
+                   │ App Plugin  │
+                   └──────┬──────┘
+                          │
+                          ▼
+                    WordPress DB
+```
+
+The two packages have different responsibilities.
+
+The backend manages the information.
+
+The frontend manages the experience.
+
+---
+
+# 46. Final Installation Checklist
+
+A new website built from this frontend should pass the following checklist:
+
+* [ ] WordPress backend is installed
+* [ ] Full Stack App plugin is active
+* [ ] `/wp-json/fullstack/v1/status` works
+* [ ] Posts API works
+* [ ] Categories API works
+* [ ] Applications API works
+* [ ] Frontend package is extracted
+* [ ] `config.php` is configured
+* [ ] WordPress path is correct if direct bootstrapping is used
+* [ ] Frontend opens successfully
+* [ ] Homepage works
+* [ ] Articles work
+* [ ] Applications work
+* [ ] CMS pages work
+* [ ] Pagination works
+* [ ] 404 handling works
+* [ ] Images load
+* [ ] Downloads work
+* [ ] Dark mode works
+* [ ] Mobile layout works
+* [ ] HTTPS works
+* [ ] Production API/CORS configuration has been reviewed
+
+---
+
+# 47. Final Result
+
+We started with two separate technologies:
+
+```text id="r5m8x2"
+WordPress
++
+PHP
+```
+
+and gave them separate responsibilities.
+
+WordPress became the content and application backend.
+
+The Full Stack App plugin became the API layer.
+
+The PHP package became the public-facing application.
+
+CSS became the visual system.
+
+JavaScript became a lightweight enhancement layer.
+
+The final result is a headless website architecture that looks like this:
+
+```text id="y7n3q6"
+                 ┌───────────────────┐
+                 │     WordPress     │
+                 │                   │
+                 │   CMS + Database  │
+                 └─────────┬─────────┘
+                           │
+                           ▼
+                 ┌───────────────────┐
+                 │  Full Stack App   │
+                 │      Plugin       │
+                 │                   │
+                 │    REST API       │
+                 └─────────┬─────────┘
+                           │
+                           │ JSON / Data
+                           ▼
+                 ┌───────────────────┐
+                 │   PHP Frontend    │
+                 │                   │
+                 │ PHP + HTML        │
+                 │ CSS + JavaScript  │
+                 └─────────┬─────────┘
+                           │
+                           ▼
+                        Browser
+```
+
+And that is the real purpose of the package.
+
+It is not simply a collection of PHP files.
+
+It is a **reusable starting point for building a headless website with WordPress as the backend and PHP as the public-facing application layer**.
+
+The reference website, **sanjibsinha.in**, is one implementation of that architecture.
+
+The backend and frontend packages allow us to take the same underlying ideas and build something entirely different on top of them.
+
+That is where this project becomes particularly interesting.
+
+We have moved from building **one website** to creating the foundation for building **the next website**.
+

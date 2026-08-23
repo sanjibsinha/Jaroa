@@ -1,0 +1,10 @@
+fullstack-app/
+├── fullstack-app.php
+├── app/
+│   └── Api/
+│       ├── Status.php
+│       └── Posts.php
+├── tests/
+│   └── api-posts.sh
+├── config/
+└── composer.json

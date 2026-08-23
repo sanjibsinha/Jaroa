@@ -1,0 +1,14 @@
+# Composer
+vendor/
+
+# DDEV generated files
+.ddev/*
+!.ddev/config.yaml
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+| Action                  | Linux Shortcut     |
+| ----------------------- | ------------------ |
+| Search in current file  | `Ctrl + F`         |
+| Search all files        | `Ctrl + Shift + F` |
+| Replace in current file | `Ctrl + H`         |
+| Replace in all files    | `Ctrl + Shift + H` |
+| Go to file              | `Ctrl + P`         |
+| Go to symbol            | `Ctrl + Shift + O` |
+| Command Palette         | `Ctrl + Shift + P` |
