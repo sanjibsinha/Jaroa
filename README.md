@@ -1,260 +1,523 @@
-# Headless PHP Application
+# Jaroa
 
 **Version 1.0**
 
-A full-stack web application architecture that separates content management from presentation.
+Jaroa is a simple, lightweight web application platform built around a clear separation between the frontend and backend.
 
-The backend uses **WordPress as a headless CMS**, while the frontend is built as a **standalone PHP application** that communicates with the backend through a custom REST API.
+The frontend is an independent PHP application. The backend currently uses WordPress and a custom plugin to provide application data through a REST API.
 
-This repository represents **Version 1**, the first reference implementation of the architecture that will eventually evolve into a reusable headless PHP application framework.
+The two applications communicate over HTTPS using JSON.
+
+Jaroa is being developed incrementally. Version 1.0 establishes the foundational architecture from which the project will evolve into a more reusable and approachable application platform.
 
 ---
 
 ## Architecture
 
-The application is divided into two distinct layers:
+The fundamental architecture of Jaroa is:
 
 ```text
-                    HEADLESS PHP APPLICATION
-                              │
-                ┌─────────────┴─────────────┐
-                │                           │
-             BACKEND                     FRONTEND
-                │                           │
-           WordPress                    PHP Application
-                │                           │
-        Custom WordPress Plugin        Templates / Views
-                │                       Components
-                │                       Routing
-                │                       API Client
-                │                           │
-                └──────────── REST API ─────┘
-                              │
-                              ▼
-                     WordPress Database
+Browser
+   │
+   ▼
+Jaroa Frontend
+   │
+   ▼
+Router
+   │
+   ▼
+Controllers
+   │
+   ▼
+Services
+   │
+   ▼
+ApiClient
+   │
+   │ HTTPS / JSON
+   ▼
+Jaroa Backend
+   │
+   ▼
+WordPress + fullstack-app plugin
 ```
 
-### Backend
+The frontend and backend are separate applications.
 
-The backend is a standard WordPress installation configured to operate primarily as a content management and data layer.
+The API is the boundary between them.
 
-A custom WordPress plugin provides the application's API endpoints and isolates application-specific backend functionality from WordPress core.
-
-The backend is responsible for:
-
-* Content management
-* Posts and pages
-* Categories and taxonomies
-* Media
-* Application-specific data
-* REST API endpoints
-* WordPress database interaction
-
-### Frontend
-
-The frontend is an independent PHP application.
-
-It does not directly interact with the WordPress database.
-
-Instead, it communicates with the backend through the defined REST API.
-
-The frontend is responsible for:
-
-* Routing
-* Controllers
-* Services
-* API communication
-* Templates
-* Components
-* HTML rendering
-* CSS
-* JavaScript
-* User-facing application behavior
+This separation is central to the Jaroa architecture.
 
 ---
 
-## Why This Architecture?
+## Version 1.0
 
-Traditional WordPress applications usually combine the following responsibilities:
+Jaroa 1.0 is the first formal version of the project.
 
-```text
-WordPress
-├── Database
-├── CMS
-├── Business logic
-├── Templates
-├── HTML
-├── CSS
-└── JavaScript
-```
+It establishes a working foundation consisting of:
 
-This project deliberately separates those concerns:
+* An independent PHP frontend
+* A separate backend application
+* A defined API boundary
+* Routing
+* Controllers
+* Services
+* An API client
+* Server-side views
+* A WordPress-based backend
+* A custom WordPress plugin for application-specific API functionality
+* HTTPS communication between frontend and backend
+* Independent DDEV development environments
 
-```text
-WordPress
-├── CMS
-├── Database
-└── API
-       │
-       ▼
-PHP Application
-├── Routing
-├── Application logic
-├── Templates
-├── Components
-├── HTML
-├── CSS
-└── JavaScript
-```
+Version 1.0 should be considered a **foundational architecture**, not a finished framework.
 
-This separation allows the frontend to evolve independently from the WordPress backend.
-
-It also creates a natural foundation for reusable application architecture.
+The purpose of this version is to establish a clean, working system before introducing higher-level abstractions and automation.
 
 ---
 
 ## Repository Structure
 
 ```text
-.
+Jaroa/
+│
 ├── backend/
-│   └── WordPress application
+│   ├── wp-admin/
+│   ├── wp-content/
+│   │   └── plugins/
+│   │       └── fullstack-app/
+│   ├── wp-includes/
+│   ├── wp-config.php
+│   └── ...
 │
 ├── frontend/
-│   └── PHP application
+│   ├── app/
+│   │   ├── Api/
+│   │   ├── Controllers/
+│   │   ├── Routing/
+│   │   ├── Services/
+│   │   ├── Application.php
+│   │   └── View.php
+│   │
+│   ├── config/
+│   │   └── app.php
+│   │
+│   ├── views/
+│   ├── public/
+│   │   └── index.php
+│   │
+│   └── composer.json
 │
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
-The two directories represent two independent applications that together form one complete system.
+The `frontend` and `backend` directories represent two independent applications.
+
+Together they form the Jaroa system.
+
+---
+
+## Frontend
+
+The Jaroa frontend is a standalone PHP application.
+
+It does not communicate directly with the WordPress database and does not depend on WordPress templates.
+
+Instead, requests move through a small application architecture:
+
+```text
+Request
+   │
+   ▼
+Router
+   │
+   ▼
+Controller
+   │
+   ▼
+Service
+   │
+   ▼
+ApiClient
+   │
+   ▼
+Backend API
+```
+
+The frontend is responsible for:
+
+* HTTP request handling
+* Routing
+* Controllers
+* Application services
+* API communication
+* Views
+* HTML rendering
+* Frontend assets
+* User-facing application behavior
+
+This allows the frontend to remain independent of the technology used by the backend.
+
+---
+
+## Backend
+
+The current Jaroa backend is powered by WordPress.
+
+WordPress provides the content management and persistence layer, while the `fullstack-app` plugin provides Jaroa-specific backend functionality and API endpoints.
+
+Conceptually:
+
+```text
+Jaroa Backend
+     │
+     ├── WordPress
+     │     └── Database
+     │
+     └── fullstack-app
+           └── Application API
+```
+
+The backend is deliberately isolated from the frontend.
+
+The frontend does not need to know how the backend stores or manages its data.
 
 ---
 
 ## API Boundary
 
-The backend and frontend communicate through a defined REST API boundary.
-
-Conceptually:
+The API is the contract between the two applications.
 
 ```text
+Jaroa Frontend
+      │
+      │ HTTPS
+      │ JSON
+      ▼
+Application API
+      │
+      ▼
+Jaroa Backend
+```
+
+This boundary is one of the most important architectural decisions in Jaroa.
+
+The frontend consumes application data through an API client and services rather than accessing WordPress internals directly.
+
+This creates the possibility of changing or replacing the backend without fundamentally redesigning the frontend.
+
+---
+
+## Development Environment
+
+Jaroa currently uses [DDEV](https://ddev.com/) to provide separate development environments for the frontend and backend.
+
+The development architecture looks like:
+
+```text
+┌─────────────────────────┐
+│   frontend.ddev.site    │
+│                         │
+│     Jaroa Frontend      │
+└────────────┬────────────┘
+             │
+             │ HTTPS / JSON API
+             ▼
+┌─────────────────────────┐
+│    backend.ddev.site    │
+│                         │
+│ WordPress + fullstack-  │
+│ app plugin              │
+└─────────────────────────┘
+```
+
+This separation is intentional.
+
+Each application can be developed, tested, and evolved independently.
+
+---
+
+## Requirements
+
+To work with the current Jaroa development environment, you should have:
+
+* Git
+* Docker
+* DDEV
+* PHP
+* Composer
+* A web browser
+
+Basic familiarity with PHP, Git, Docker, and DDEV is recommended.
+
+---
+
+## Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/sanjibsinha/Jaroa.git
+cd Jaroa
+```
+
+The repository contains both the frontend and backend applications, along with their DDEV configuration.
+
+### Start the Backend
+
+Move into the backend application:
+
+```bash
+cd backend
+```
+
+Start the DDEV environment:
+
+```bash
+ddev start
+```
+
+The backend is available at:
+
+```text
+https://backend.ddev.site
+```
+
+### Start the Frontend
+
+Open another terminal and move into the Jaroa project:
+
+```bash
+cd ~/Jaroa/frontend
+```
+
+Install the frontend dependencies:
+
+```bash
+composer install
+```
+
+Start the frontend DDEV environment:
+
+```bash
+ddev start
+```
+
+The frontend is available at:
+
+```text
+https://frontend.ddev.site
+```
+
+Both DDEV projects should be running independently.
+
+---
+
+## Testing the Architecture
+
+Once both applications are running, the basic communication path should be:
+
+```text
+Browser
+   │
+   ▼
+https://frontend.ddev.site
+   │
+   ▼
+Jaroa Frontend
+   │
+   ▼
+API Client
+   │
+   │ HTTPS / JSON
+   ▼
+https://backend.ddev.site
+   │
+   ▼
+WordPress
+   │
+   ▼
+fullstack-app
+```
+
+The important test is not simply whether both websites open independently.
+
+The important test is whether the **frontend can successfully obtain application data from the backend through the API**.
+
+You can also inspect the communication through your browser's developer tools:
+
+```text
+Chrome / Browser
+    → Developer Tools
+    → Network
+    → Reload the frontend
+```
+
+The API request should reach the backend and return the expected JSON response.
+
+---
+
+## Why Separate the Frontend and Backend?
+
+A conventional WordPress application commonly combines content management, database access, application logic, templates, HTML, CSS, and JavaScript in one environment.
+
+Jaroa deliberately separates these concerns.
+
+```text
+Traditional Application
+
+WordPress
+├── CMS
+├── Database
+├── Application Logic
+├── Templates
+├── HTML
+├── CSS
+└── JavaScript
+```
+
+Jaroa instead moves toward:
+
+```text
+Jaroa
+
+Backend
+├── CMS
+├── Database
+└── API
+      │
+      ▼
 Frontend
-    │
-    │ HTTP / REST
-    ▼
-API Contract
-    │
-    ▼
-WordPress Backend
-    │
-    ▼
-Database
+├── Routing
+├── Controllers
+├── Services
+├── Views
+├── HTML
+├── CSS
+└── JavaScript
 ```
 
-The frontend should consume application data through services and API clients rather than depending on WordPress internals.
+The result is a system where the frontend and backend can evolve independently.
 
-This boundary is one of the most important architectural decisions in the project.
-
----
-
-## Version 1
-
-This repository is **Version 1.0** of the project.
-
-Version 1 is intentionally treated as a **reference implementation**, not as a finished framework.
-
-The goal is to build a complete working application first and observe which parts of the architecture are genuinely reusable.
-
-Only after that will reusable components be extracted into a framework-level structure.
+More importantly, the API becomes a stable architectural boundary.
 
 ---
 
-## Future Direction
+## Vision
 
-The long-term goal is to evolve the architecture gradually:
+Jaroa is intended to grow beyond the current WordPress-based implementation.
+
+The long-term vision is to create a simple and lightweight platform for building web applications without forcing every application to begin with a large framework or tightly coupled architecture.
+
+The intended direction is:
 
 ```text
-Version 1
+Jaroa 1.0
    │
    ▼
-Reference Application
+Foundational Architecture
    │
    ▼
-Identify Reusable Components
+Reusable Frontend Components
    │
    ▼
-Extract Core Packages
+Application Templates
+   │
+   ├── Blog
+   ├── Profile
+   └── Other Applications
    │
    ▼
-Headless PHP Framework
-   │
-   ├── WordPress Backend Core
-   ├── REST API Contract
-   ├── PHP Frontend Core
-   ├── Routing
-   ├── Controllers
-   ├── Services
-   ├── Views
-   ├── Components
-   ├── Configuration
-   └── Caching
+Automated Installer
    │
    ▼
-Starter Applications
+Progressively More Capabilities
+   │
+   ▼
+Native Jaroa Backend
+   │
+   ▼
+More Approachable Application Development
 ```
 
-The framework will only emerge if the architecture proves reusable across multiple applications.
+The current WordPress backend is therefore not necessarily the final destination.
+
+It provides a practical and mature backend while the frontend architecture is being developed.
+
+Eventually, Jaroa may provide its own native backend capable of replacing the WordPress implementation while preserving the API-oriented architecture.
+
+---
+
+## The Larger Idea
+
+The central idea behind Jaroa is simple:
+
+> **Build the application first. Discover the platform through real applications.**
+
+Jaroa will not attempt to predict every possible requirement before those requirements exist.
+
+Instead, reusable components and abstractions will emerge from actual applications built with the system.
+
+This approach is intended to keep Jaroa:
+
+* Small
+* Understandable
+* Practical
+* Modular
+* Maintainable
+* Extensible
+
+The project will grow progressively rather than attempting to become a complete framework overnight.
 
 ---
 
 ## Development Philosophy
 
-This project follows a simple principle:
+Jaroa is being developed one deliberate change at a time.
 
-> **First build the application. Then discover the framework.**
+The working principle is:
 
-We will avoid premature abstraction and extract functionality only when repeated implementations demonstrate that a component genuinely belongs in the common architecture.
+```text
+One meaningful change
+        ↓
+Implement
+        ↓
+Test
+        ↓
+Verify
+        ↓
+Commit
+        ↓
+Next change
+```
 
-This keeps the framework grounded in real applications rather than theoretical requirements.
+The architecture should evolve from working software rather than from premature abstraction.
 
----
-
-## Technology
-
-### Backend
-
-* WordPress
-* PHP
-* MySQL
-* Custom WordPress Plugin
-* WordPress REST API
-
-### Frontend
-
-* PHP
-* HTML
-* CSS
-* JavaScript
-* Custom application architecture
-
-### Development Environment
-
-* Docker
-* DDEV
-* Git
+Every new capability should justify its place in the platform through actual use.
 
 ---
 
-## Status
+## Project Status
 
 **Version:** 1.0
-**Status:** Initial reference implementation
+**Status:** Foundational architecture established
 
-The architecture is under active development.
+Jaroa is actively under development.
+
+The current version establishes the independent frontend/backend architecture and API communication layer.
+
+Future versions will build upon this foundation.
+
+---
+
+## Repository
+
+The Jaroa source code is available on GitHub:
+
+**https://github.com/sanjibsinha/Jaroa**
 
 ---
 
 ## License
 
-License information will be added as the project evolves.
+License information will be added as the project develops.
 
