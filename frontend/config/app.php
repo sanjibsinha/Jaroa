@@ -3,9 +3,10 @@
 return [
     'name' => 'Jaroa',
 
-    'environment' => 'local',
+    'environment' => getenv('JAROA_ENV') ?: 'local',
 
     'api' => [
-        'base_url' => 'https://backend.ddev.site/wp-json/fullstack/v1',
+        'base_url' => getenv('JAROA_API_URL')
+            ?: 'https://backend.ddev.site/wp-json/fullstack/v1',
     ],
 ];
