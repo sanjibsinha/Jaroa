@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => 'Headless PHP Application',
+    'name' => 'Jaroa',
 
     'environment' => 'local',
 
