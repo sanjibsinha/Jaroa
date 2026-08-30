@@ -72,9 +72,21 @@ class Application
      */
     public function run(): mixed
     {
-        return $this->router->dispatch(
-            $_SERVER['REQUEST_METHOD'] ?? 'GET',
-            $_SERVER['REQUEST_URI'] ?? '/'
-        );
+        try {
+            return $this->router->dispatch(
+                $_SERVER['REQUEST_METHOD'] ?? 'GET',
+                $_SERVER['REQUEST_URI'] ?? '/'
+            );
+        } catch (\RuntimeException $exception) {
+            if (404 !== $exception->getCode()) {
+                throw $exception;
+            }
+
+            http_response_code(404);
+
+            View::render('404');
+
+            return null;
+        }
     }
 }
