@@ -26,7 +26,9 @@ $pageDescription = 'The page you requested could not be found.';
 
 <header>
     <p>
-        <a href="/">Jaroa</a>
+        <a href="/">
+            <?= htmlspecialchars($appName) ?>
+        </a>
     </p>
 </header>
 
@@ -37,18 +39,18 @@ $pageDescription = 'The page you requested could not be found.';
     <h2>Page Not Found</h2>
 
     <p>
-        The page you requested could not be found.
+        <?= htmlspecialchars($pageDescription) ?>
     </p>
 
     <p>
-        <a href="/">Back to Jaroa</a>
+        <a href="/">Back to <?= htmlspecialchars($appName) ?></a>
     </p>
 
 </main>
 
 <footer>
     <p>
-        Jaroa
+        <?= htmlspecialchars($appName) ?>
     </p>
 </footer>
 

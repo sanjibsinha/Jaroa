@@ -3,7 +3,7 @@
 $posts = $posts['data'] ?? [];
 $apps  = $apps['data'] ?? [];
 
-$pageTitle = 'Headless PHP Application';
+$pageTitle = $appName;
 $pageDescription = 'A PHP frontend powered by a headless WordPress backend.';
 ?>
 
@@ -11,7 +11,11 @@ $pageDescription = 'A PHP frontend powered by a headless WordPress backend.';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title><?= htmlspecialchars($pageTitle) ?></title>
 
@@ -98,7 +102,11 @@ $pageDescription = 'A PHP frontend powered by a headless WordPress backend.';
 
                 <article>
                     <h3>
-                        <?= htmlspecialchars($post['title']) ?>
+                        <a
+                            href="/articles/<?= rawurlencode($post['slug']) ?>"
+                        >
+                            <?= htmlspecialchars($post['title']) ?>
+                        </a>
                     </h3>
 
                     <p>
@@ -120,7 +128,7 @@ $pageDescription = 'A PHP frontend powered by a headless WordPress backend.';
 
 <footer>
     <p>
-        Headless PHP Application
+        <?= htmlspecialchars($appName) ?>
     </p>
 </footer>
 

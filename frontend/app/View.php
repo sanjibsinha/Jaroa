@@ -6,6 +6,19 @@ use RuntimeException;
 
 class View
 {
+    private static array $shared = [];
+
+    /**
+     * Share data with all views.
+     */
+    public static function share(array $data): void
+    {
+        self::$shared = array_merge(
+            self::$shared,
+            $data
+        );
+    }
+
     /**
      * Render a view.
      */
@@ -22,7 +35,10 @@ class View
         }
 
         extract(
-            $data,
+            array_merge(
+                self::$shared,
+                $data
+            ),
             EXTR_SKIP
         );
 
