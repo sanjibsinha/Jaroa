@@ -2,6 +2,7 @@
 
 namespace App\Api;
 
+use App\Exceptions\NotFoundException;
 use RuntimeException;
 
 class ApiClient
@@ -23,14 +24,20 @@ class ApiClient
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
+
                 'header' => [
                     'Accept: application/json',
                 ],
+
                 'ignore_errors' => true,
             ],
         ]);
 
-        $response = file_get_contents($url, false, $context);
+        $response = file_get_contents(
+            $url,
+            false,
+            $context
+        );
 
         if (false === $response) {
             throw new RuntimeException(
@@ -38,18 +45,29 @@ class ApiClient
             );
         }
 
-        $statusCode = $this->getStatusCode($http_response_header ?? []);
+        $statusCode = $this->getStatusCode(
+            $http_response_header ?? []
+        );
 
-        $data = json_decode($response, true);
+        $data = json_decode(
+            $response,
+            true
+        );
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new RuntimeException(
-                'API returned invalid JSON: ' . json_last_error_msg()
+                'API returned invalid JSON: ' .
+                json_last_error_msg()
             );
         }
 
         if ($statusCode < 200 || $statusCode >= 300) {
-            $message = $data['message'] ?? 'API request failed.';
+            $message = $data['message']
+                ?? 'API request failed.';
+
+            if (404 === $statusCode) {
+                throw new NotFoundException($message);
+            }
 
             throw new RuntimeException(
                 "API request failed ({$statusCode}): {$message}"
@@ -62,9 +80,14 @@ class ApiClient
     /**
      * Build the complete API URL.
      */
-    private function buildUrl(string $endpoint, array $query = []): string
-    {
-        $endpoint = '/' . ltrim($endpoint, '/');
+    private function buildUrl(
+        string $endpoint,
+        array $query = []
+    ): string {
+        $endpoint = '/' . ltrim(
+            $endpoint,
+            '/'
+        );
 
         $url = $this->baseUrl . $endpoint;
 
@@ -81,7 +104,13 @@ class ApiClient
     private function getStatusCode(array $headers): int
     {
         foreach ($headers as $header) {
-            if (preg_match('/^HTTP\/\S+\s+(\d{3})/', $header, $matches)) {
+            if (
+                preg_match(
+                    '/^HTTP\/\S+\s+(\d{3})/',
+                    $header,
+                    $matches
+                )
+            ) {
                 return (int) $matches[1];
             }
         }

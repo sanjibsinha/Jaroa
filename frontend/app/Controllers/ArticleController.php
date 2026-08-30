@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Exceptions\NotFoundException;
 use App\Services\PostService;
 use App\View;
 
@@ -20,18 +21,12 @@ class ArticleController
         $slug = $parameters['slug'] ?? '';
 
         if ('' === $slug) {
-            http_response_code(404);
-            echo 'Article not found.';
-            return;
+            throw new NotFoundException(
+                'Article slug is missing.'
+            );
         }
 
-        try {
-            $article = $this->posts->findBySlug($slug);
-        } catch (\RuntimeException $exception) {
-            http_response_code(404);
-            echo 'Article not found.';
-            return;
-        }
+        $article = $this->posts->findBySlug($slug);
 
         View::render(
             'article',

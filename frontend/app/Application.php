@@ -5,6 +5,7 @@ namespace App;
 use App\Api\ApiClient;
 use App\Controllers\ArticleController;
 use App\Controllers\HomeController;
+use App\Exceptions\NotFoundException;
 use App\Routing\Router;
 use App\Services\AppService;
 use App\Services\PostService;
@@ -24,6 +25,10 @@ class Application
         $this->api = new ApiClient(
             $config['api']['base_url']
         );
+
+        View::share([
+            'appName' => $config['name'],
+        ]);
 
         $this->postService = new PostService(
             $this->api
@@ -77,11 +82,7 @@ class Application
                 $_SERVER['REQUEST_METHOD'] ?? 'GET',
                 $_SERVER['REQUEST_URI'] ?? '/'
             );
-        } catch (\RuntimeException $exception) {
-            if (404 !== $exception->getCode()) {
-                throw $exception;
-            }
-
+        } catch (NotFoundException $exception) {
             http_response_code(404);
 
             View::render('404');

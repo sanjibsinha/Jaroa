@@ -2,7 +2,7 @@
 
 namespace App\Routing;
 
-use RuntimeException;
+use App\Exceptions\NotFoundException;
 
 class Router
 {
@@ -58,9 +58,8 @@ class Router
             }
         }
 
-        throw new RuntimeException(
-            "Route not found: {$method} {$path}",
-            404
+        throw new NotFoundException(
+            "Route not found: {$method} {$path}"
         );
     }
 
