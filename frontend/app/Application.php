@@ -9,7 +9,9 @@ use App\Exceptions\NotFoundException;
 use App\Routing\Router;
 use App\Services\AppService;
 use App\Services\PostService;
-use App\Controllers\ProfileController;
+use App\Controllers\TemplateController;
+use App\Controllers\TemplateShowcaseController;
+use App\Templates\TemplateManager;
 
 class Application
 {
@@ -39,14 +41,43 @@ class Application
             $this->api
         );
 
+        $templateManager = new TemplateManager(
+            __DIR__ . '/../templates',
+            __DIR__ . '/../storage/active-template'
+        );
+
+        View::setTemplateManager(
+            $templateManager
+        );
+
         $this->router = new Router();
+
+        /*
+         * Template installer.
+         */
+        $templateController = new TemplateController(
+            $templateManager
+        );
+
+        $this->router->get(
+            '/templates',
+            [$templateController, 'index']
+        );
+
+        $this->router->post(
+            '/templates/activate/{slug}',
+            [$templateController, 'activate']
+        );
+
+
 
         /*
          * Home controller.
          */
         $homeController = new HomeController(
             $this->postService,
-            $this->appService
+            $this->appService,
+            $templateManager
         );
 
         /*
@@ -72,18 +103,47 @@ class Application
             [$articleController, 'show']
         );
 
-        /*
-        * Profile controller.
-        */
-        $profileController = new ProfileController();
 
         /*
-        * Profile route.
-        */
-        $this->router->get(
-            '/profile',
-            [$profileController, 'index']
-        );
+         * Template showcase routes.
+         */
+        $templateShowcaseController =
+            new TemplateShowcaseController(
+                $templateManager
+            );
+
+        foreach (
+            $templateManager->available()
+            as $template
+        ) {
+            $showcase = $template['showcase'] ?? null;
+            $slug = $template['slug'] ?? null;
+
+            if (
+                !is_string($showcase) ||
+                '' === $showcase ||
+                !is_string($slug) ||
+                '' === $slug
+            ) {
+                continue;
+            }
+
+            $this->router->get(
+                $showcase,
+                static function () use (
+                    $templateShowcaseController,
+                    $slug
+                ): void {
+                    $templateShowcaseController->show(
+                        [
+                            'slug' => $slug,
+                        ]
+                    );
+                }
+            );
+        }
+
+
     }
 
     /**

@@ -1,0 +1,9 @@
+{
+    "name": "Blog",
+    "slug": "blog",
+    "version": "1.0.0",
+    "description": "A clean editorial starter template for personal and professional blogs.",
+    "author": "Jaroa",
+    "entry": "template.php",
+    "showcase": "/blog"
+}

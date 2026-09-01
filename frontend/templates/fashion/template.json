@@ -1,0 +1,9 @@
+{
+    "name": "Fashion",
+    "slug": "fashion",
+    "version": "1.0.0",
+    "description": "An editorial fashion starter template with a visual magazine feel.",
+    "author": "Jaroa",
+    "entry": "template.php",
+    "showcase": "/fashion"
+}

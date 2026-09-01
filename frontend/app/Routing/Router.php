@@ -19,6 +19,20 @@ class Router
     /**
      * Register a route.
      */
+    /**
+     * Register a POST route.
+     */
+    public function post(
+        string $path,
+        callable $handler
+    ): void {
+        $this->add(
+            'POST',
+            $path,
+            $handler
+        );
+    }
+
     private function add(
         string $method,
         string $path,

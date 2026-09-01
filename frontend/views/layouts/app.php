@@ -10,6 +10,11 @@
 
     <title><?= htmlspecialchars($pageTitle) ?></title>
 
+    <link
+        rel="stylesheet"
+        href="/assets/css/jaroa-layout.css"
+    >
+
     <?php if (!empty($pageDescription)): ?>
 
         <meta
@@ -35,13 +40,32 @@
 
 <body>
 
-<header>
-    <p>
-        <a href="/">
-            <?= htmlspecialchars($appName) ?>
-        </a>
-    </p>
+<?php
+$requestPath = parse_url(
+    $_SERVER['REQUEST_URI'] ?? '/',
+    PHP_URL_PATH
+);
+?>
+
+<?php if (
+    ($showSiteHeader ?? true) &&
+    '/' !== $requestPath
+): ?>
+
+<header class="jaroa-layout-header">
+
+    <a
+        class="jaroa-home-link"
+        href="/"
+        aria-label="Return to Jaroa home"
+    >
+        <span class="jaroa-home-mark">J</span>
+        <span>Jaroa</span>
+    </a>
+
 </header>
+
+<?php endif; ?>
 
 <main>
 
@@ -49,11 +73,15 @@
 
 </main>
 
-<footer>
+<?php if ($showSiteFooter ?? true): ?>
+
+<footer class="site-footer">
     <p>
         <?= htmlspecialchars($appName) ?>
     </p>
 </footer>
+
+<?php endif; ?>
 
 </body>
 </html>

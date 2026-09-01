@@ -1,0 +1,209 @@
+/* Jaroa editorial article */
+
+.article-page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 42px 28px 90px;
+}
+
+.article-header {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.article-kicker {
+    margin: 0 0 18px;
+    color: #777;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+}
+
+.article-header h1 {
+    margin: 0;
+    color: #111;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3.2rem, 7vw, 6.5rem);
+    font-weight: 400;
+    line-height: .94;
+    letter-spacing: -.055em;
+}
+
+.article-meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+    color: #777;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+.article-meta span + span::before {
+    content: "·";
+    margin-right: 14px;
+    color: #bbb;
+}
+
+.article-featured-image {
+    margin: 54px auto 0;
+}
+
+.article-featured-image img {
+    display: block;
+    width: 100%;
+    max-height: 620px;
+    object-fit: cover;
+    border-radius: 28px;
+}
+
+.article-body {
+    max-width: 720px;
+    margin: 58px auto 0;
+    color: #27231f;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 19px;
+    line-height: 1.85;
+}
+
+.article-body > * {
+    margin-top: 0;
+    margin-bottom: 1.65rem;
+}
+
+.article-body h2 {
+    margin-top: 3.5rem;
+    color: #111;
+    font-size: 2.4rem;
+    line-height: 1.05;
+    letter-spacing: -.035em;
+}
+
+.article-body h3 {
+    margin-top: 2.8rem;
+    color: #111;
+    font-size: 1.8rem;
+    line-height: 1.1;
+}
+
+.article-body p:first-child {
+    font-size: 1.18em;
+}
+
+.article-body a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.article-body blockquote {
+    margin: 3rem 0;
+    padding: 1rem 0 1rem 2rem;
+    border-left: 3px solid #111;
+    color: #555;
+    font-size: 1.35em;
+    line-height: 1.45;
+}
+
+.article-body ul,
+.article-body ol {
+    padding-left: 1.5rem;
+}
+
+.article-body li + li {
+    margin-top: .5rem;
+}
+
+.article-body img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 3rem 0;
+    border-radius: 18px;
+}
+
+.article-body figure {
+    margin: 3rem 0;
+}
+
+.article-body figcaption {
+    margin-top: .7rem;
+    color: #777;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.article-body code {
+    padding: .15em .35em;
+    border-radius: 5px;
+    background: #f0f0f0;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: .86em;
+}
+
+.article-body pre {
+    overflow-x: auto;
+    padding: 1.4rem;
+    border-radius: 14px;
+    background: #151515;
+    color: #f5f5f5;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: .84em;
+    line-height: 1.6;
+}
+
+.article-footer {
+    max-width: 720px;
+    margin: 70px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid #ddd;
+    color: #777;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+.article-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #111;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.article-back:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+    .article-page {
+        padding: 28px 18px 60px;
+    }
+
+    .article-header h1 {
+        font-size: clamp(2.7rem, 12vw, 4.6rem);
+    }
+
+    .article-featured-image {
+        margin-top: 38px;
+    }
+
+    .article-featured-image img {
+        max-height: 420px;
+        border-radius: 20px;
+    }
+
+    .article-body {
+        margin-top: 42px;
+        font-size: 18px;
+    }
+
+    .article-body h2 {
+        font-size: 2rem;
+    }
+}

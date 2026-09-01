@@ -1,0 +1,9 @@
+{
+    "name": "News",
+    "slug": "news",
+    "version": "1.0.0",
+    "description": "A compact news and magazine starter template.",
+    "author": "Jaroa",
+    "entry": "template.php",
+    "showcase": "/news"
+}

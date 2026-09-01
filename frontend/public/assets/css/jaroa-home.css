@@ -1,0 +1,243 @@
+/* Jaroa landing page */
+
+.jaroa-home {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+}
+
+.jaroa-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 3rem;
+    align-items: center;
+    min-height: 560px;
+    padding: 4rem;
+    border-radius: 32px;
+    background: #111;
+    color: #fff;
+}
+
+.jaroa-kicker {
+    margin: 0 0 1.25rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.jaroa-hero h1 {
+    max-width: 850px;
+    margin: 0;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.065em;
+}
+
+.jaroa-hero h1 span {
+    display: block;
+    opacity: 0.45;
+}
+
+.jaroa-intro {
+    max-width: 650px;
+    margin: 2rem 0 0;
+    color: #bbb;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.jaroa-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2rem;
+}
+
+.jaroa-button {
+    display: inline-block;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    color: inherit;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.jaroa-button:hover {
+    background: #fff;
+    color: #111;
+}
+
+.jaroa-button-primary {
+    background: #fff;
+    color: #111;
+}
+
+.jaroa-button-primary:hover {
+    background: transparent;
+    color: #fff;
+}
+
+.jaroa-hero-mark {
+    display: grid;
+    place-items: center;
+    width: 220px;
+    height: 220px;
+    border: 1px solid #555;
+    border-radius: 50%;
+    transform: rotate(-8deg);
+}
+
+.jaroa-hero-mark span {
+    font-size: 8rem;
+    font-weight: 900;
+    letter-spacing: -0.1em;
+}
+
+.jaroa-workspace,
+.jaroa-architecture,
+.jaroa-articles {
+    padding-top: 6rem;
+}
+
+.jaroa-section-heading {
+    max-width: 700px;
+    margin-bottom: 2rem;
+}
+
+.jaroa-section-heading h2 {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+}
+
+.jaroa-status-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: center;
+    padding: 2.5rem;
+    border: 1px solid #ddd;
+    border-radius: 26px;
+}
+
+.jaroa-status-label,
+.jaroa-article-date {
+    margin: 0 0 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #777;
+}
+
+.jaroa-status-card h3 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.jaroa-status-card p {
+    max-width: 600px;
+    color: #666;
+    line-height: 1.7;
+}
+
+.jaroa-status-action {
+    flex-shrink: 0;
+}
+
+.jaroa-status-action .jaroa-button {
+    color: #111;
+}
+
+.jaroa-status-action .jaroa-button:hover {
+    background: #111;
+    color: #fff;
+}
+
+.jaroa-pillars,
+.jaroa-article-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.jaroa-pillars article,
+.jaroa-article-grid article {
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 22px;
+}
+
+.jaroa-number {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: #888;
+}
+
+.jaroa-pillars h3,
+.jaroa-article-grid h3 {
+    margin: 2rem 0 0.75rem;
+    font-size: 1.5rem;
+}
+
+.jaroa-pillars p,
+.jaroa-article-grid p {
+    color: #666;
+    line-height: 1.7;
+}
+
+.jaroa-article-grid h3 {
+    margin-top: 0;
+}
+
+.jaroa-article-grid h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.jaroa-article-grid h3 a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+
+    .jaroa-hero {
+        grid-template-columns: 1fr;
+        padding: 3rem 2rem;
+    }
+
+    .jaroa-hero-mark {
+        width: 150px;
+        height: 150px;
+    }
+
+    .jaroa-hero-mark span {
+        font-size: 5rem;
+    }
+
+    .jaroa-status-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .jaroa-pillars,
+    .jaroa-article-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .jaroa-home {
+        padding-inline: 1rem;
+    }
+
+    .jaroa-hero {
+        padding: 2.5rem 1.5rem;
+        border-radius: 24px;
+    }
+}

@@ -1,5 +1,7 @@
 <?php
 
+$showSiteFooter = false;
+
 $pageTitle = $profile['name'];
 $pageDescription = $profile['bio'];
 

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-
 use App\View;
 
 class ProfileController
@@ -12,16 +11,14 @@ class ProfileController
      */
     public function index(): void
     {
-        View::render(
-            'profile',
+        View::renderTemplate(
             [
                 'profile' => [
                     'name' => 'Sanjib Deb Sinha',
                     'role' => 'Writer · Developer · AI Hobbyist',
                     'bio' => 'Exploring ideas, technology, writing and the spaces where they meet.',
                 ],
-            ],
-            'app'
+            ]
         );
     }
 }

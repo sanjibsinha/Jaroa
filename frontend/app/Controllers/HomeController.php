@@ -4,29 +4,43 @@ namespace App\Controllers;
 
 use App\Services\AppService;
 use App\Services\PostService;
+use App\Templates\TemplateManager;
 use App\View;
 
 class HomeController
 {
+    private PostService $postService;
+
+    private AppService $appService;
+
+    private TemplateManager $templateManager;
+
     public function __construct(
-        private readonly PostService $posts,
-        private readonly AppService $apps
+        PostService $postService,
+        AppService $appService,
+        TemplateManager $templateManager
     ) {
+        $this->postService = $postService;
+        $this->appService = $appService;
+        $this->templateManager = $templateManager;
     }
 
     /**
-     * Display the application homepage.
+     * Display the Jaroa landing page.
      */
     public function index(): void
     {
-        $posts = $this->posts->latest(6);
-        $apps = $this->apps->all();
+        $posts = $this->postService->latest(
+            3
+        );
 
         View::render(
             'home',
             [
                 'posts' => $posts,
-                'apps'  => $apps,
+                'apps' => $this->appService->all(),
+                'activeTemplate' =>
+                    $this->templateManager->active(),
             ]
         );
     }

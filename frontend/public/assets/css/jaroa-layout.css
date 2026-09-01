@@ -1,0 +1,60 @@
+/* Jaroa application layout */
+
+.jaroa-layout-header {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 28px 8px;
+}
+
+.jaroa-home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 15px;
+    border: 1px solid #d8d8d8;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #111111;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.jaroa-home-link:hover {
+    background: #111111;
+    border-color: #111111;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.jaroa-home-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #111111;
+    color: #ffffff;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.jaroa-home-link:hover .jaroa-home-mark {
+    background: #ffffff;
+    color: #111111;
+}
+
+@media (max-width: 700px) {
+    .jaroa-layout-header {
+        padding: 16px 18px 6px;
+    }
+}
