@@ -1,0 +1,289 @@
+<?php
+
+$pageTitle = $profile['name'];
+$pageDescription = $profile['bio'];
+?>
+
+<section class="profile">
+
+    <div class="profile-hero">
+
+        <div class="profile-hero-content">
+
+            <p class="profile-eyebrow">
+                Jaroa Starter Template
+            </p>
+
+            <h1>
+                <?= htmlspecialchars($profile['name']) ?>
+            </h1>
+
+            <p class="profile-role">
+                <?= htmlspecialchars($profile['role']) ?>
+            </p>
+
+            <p class="profile-introduction">
+                <?= htmlspecialchars($profile['bio']) ?>
+            </p>
+
+        </div>
+
+        <div class="profile-mark" aria-hidden="true">
+            <span>J</span>
+        </div>
+
+    </div>
+
+
+    <div class="profile-grid">
+
+        <section class="profile-card profile-about">
+
+            <p class="card-label">
+                About
+            </p>
+
+            <h2>
+                Ideas are worth exploring.
+            </h2>
+
+            <p>
+                This profile is a demonstration of the Jaroa
+                starter-template architecture. The presentation
+                belongs to the frontend, while the application
+                architecture remains independent underneath.
+            </p>
+
+            <p>
+                Writing, software, design and artificial intelligence
+                become different ways of asking the same question:
+                what can we build when an idea is given enough room
+                to breathe?
+            </p>
+
+        </section>
+
+
+        <section class="profile-card profile-interests">
+
+            <p class="card-label">
+                Interests
+            </p>
+
+            <ul>
+                <li>Writing</li>
+                <li>Software Development</li>
+                <li>Artificial Intelligence</li>
+                <li>Design</li>
+                <li>Philosophy</li>
+                <li>Creative Technology</li>
+            </ul>
+
+        </section>
+
+    </div>
+
+
+    <section class="profile-statement">
+
+        <p>
+            “Build the application first.
+            Let the architecture reveal itself.”
+        </p>
+
+    </section>
+
+
+    <section class="profile-footer">
+
+        <div>
+            <p class="card-label">
+                Built with
+            </p>
+
+            <h2>
+                Jaroa
+            </h2>
+        </div>
+
+        <a href="/">
+            Explore the application →
+        </a>
+
+    </section>
+
+</section>
+
+
+<style>
+
+.profile {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+}
+
+.profile-hero {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 3rem;
+    align-items: center;
+    min-height: 430px;
+    padding: 4rem;
+    background: #111;
+    color: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+}
+
+.profile-eyebrow,
+.card-label {
+    margin: 0 0 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.profile-hero h1 {
+    max-width: 750px;
+    margin: 0;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+}
+
+.profile-role {
+    margin: 1.5rem 0 0;
+    font-size: 1.25rem;
+}
+
+.profile-introduction {
+    max-width: 650px;
+    margin: 1.5rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.profile-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    transform: rotate(-8deg);
+}
+
+.profile-mark span {
+    font-size: 8rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.profile-card {
+    padding: 2.5rem;
+    border: 1px solid #ddd;
+    border-radius: 22px;
+    background: #fafafa;
+}
+
+.profile-card h2 {
+    margin: 0 0 1.5rem;
+    font-size: 2rem;
+    line-height: 1.1;
+}
+
+.profile-card p {
+    line-height: 1.8;
+}
+
+.profile-interests ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.profile-interests li {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.profile-statement {
+    margin-top: 1.5rem;
+    padding: 4rem 3rem;
+    background: #e9e4d8;
+    border-radius: 22px;
+}
+
+.profile-statement p {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    text-align: center;
+}
+
+.profile-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding: 2.5rem;
+    border-top: 1px solid #ddd;
+}
+
+.profile-footer h2 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.profile-footer a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+@media (max-width: 760px) {
+
+    .profile {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .profile-hero {
+        grid-template-columns: 1fr;
+        padding: 2.5rem 2rem;
+    }
+
+    .profile-mark {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-mark span {
+        font-size: 5rem;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
+
+</style>

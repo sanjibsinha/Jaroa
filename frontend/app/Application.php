@@ -9,6 +9,7 @@ use App\Exceptions\NotFoundException;
 use App\Routing\Router;
 use App\Services\AppService;
 use App\Services\PostService;
+use App\Controllers\ProfileController;
 
 class Application
 {
@@ -69,6 +70,19 @@ class Application
         $this->router->get(
             '/articles/{slug}',
             [$articleController, 'show']
+        );
+
+        /*
+        * Profile controller.
+        */
+        $profileController = new ProfileController();
+
+        /*
+        * Profile route.
+        */
+        $this->router->get(
+            '/profile',
+            [$profileController, 'index']
         );
     }
 
