@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Exceptions\NotFoundException;
 use App\Services\PostService;
 use App\View;
 
@@ -21,7 +20,7 @@ class ArticleController
         $slug = $parameters['slug'] ?? '';
 
         if ('' === $slug) {
-            throw new NotFoundException(
+            throw new \App\Exceptions\NotFoundException(
                 'Article slug is missing.'
             );
         }
@@ -32,7 +31,8 @@ class ArticleController
             'article',
             [
                 'article' => $article,
-            ]
+            ],
+            'app'
         );
     }
 }

@@ -3,67 +3,39 @@
 $post = $article['data'] ?? null;
 
 if (!$post) {
-    http_response_code(404);
-    echo 'Article not found.';
-    return;
+    throw new \App\Exceptions\NotFoundException(
+        'Article not found.'
+    );
 }
+
+$pageTitle = $post['title'];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<article>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <h1>
+        <?= htmlspecialchars($post['title']) ?>
+    </h1>
 
-    <title><?= htmlspecialchars($post['title']) ?></title>
-</head>
-
-<body>
-
-<header>
     <p>
-        <a href="/">
-            <?= htmlspecialchars($appName) ?>
-        </a>
+        <small>
+            <?= htmlspecialchars($post['date']) ?>
+        </small>
     </p>
-</header>
 
-<main>
+    <?php if (!empty($post['featured_image'])): ?>
 
-    <article>
+        <figure>
+            <img
+                src="<?= htmlspecialchars($post['featured_image']['url']) ?>"
+                alt="<?= htmlspecialchars($post['featured_image']['alt'] ?? '') ?>"
+            >
+        </figure>
 
-        <h1>
-            <?= htmlspecialchars($post['title']) ?>
-        </h1>
+    <?php endif; ?>
 
-        <p>
-            <small>
-                <?= htmlspecialchars($post['date']) ?>
-            </small>
-        </p>
+    <div>
+        <?= $post['content'] ?>
+    </div>
 
-        <?php if (!empty($post['featured_image'])): ?>
-
-            <figure>
-                <img
-                    src="<?= htmlspecialchars($post['featured_image']['url']) ?>"
-                    alt="<?= htmlspecialchars($post['featured_image']['alt'] ?? '') ?>"
-                >
-            </figure>
-
-        <?php endif; ?>
-
-        <div>
-            <?= $post['content'] ?>
-        </div>
-
-    </article>
-
-</main>
-
-</body>
-</html>
+</article>
