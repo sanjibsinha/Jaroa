@@ -46,34 +46,10 @@ class TemplateInstaller
             );
         }
 
-        $manifestPath = $templatePath . '/template.json';
-
-        if (!is_file($manifestPath)) {
-            throw new RuntimeException(
-                "Template manifest not found: {$slug}"
-            );
-        }
-
-        $manifest = json_decode(
-            file_get_contents($manifestPath),
-            true
+        $manifest = $this->loadManifest(
+            $templatePath,
+            $slug
         );
-
-        if (
-            !is_array($manifest) ||
-            empty($manifest['slug']) ||
-            empty($manifest['entry'])
-        ) {
-            throw new RuntimeException(
-                "Invalid template manifest: {$slug}"
-            );
-        }
-
-        if ($manifest['slug'] !== $slug) {
-            throw new RuntimeException(
-                "Template slug mismatch: {$slug}"
-            );
-        }
 
         $entryPath = $templatePath . '/' . $manifest['entry'];
 
@@ -83,8 +59,81 @@ class TemplateInstaller
             );
         }
 
-        $viewPath = $this->viewsPath . '/' . $slug . '.php';
+        $this->installView(
+            $entryPath,
+            $slug
+        );
 
+        $this->installAssets(
+            $templatePath,
+            $slug
+        );
+    }
+
+    /**
+     * Load and validate a template manifest.
+     */
+    private function loadManifest(
+        string $templatePath,
+        string $slug
+    ): array {
+        $manifestPath = $templatePath . '/template.json';
+
+        if (!is_file($manifestPath)) {
+            throw new RuntimeException(
+                "Template manifest not found: {$slug}"
+            );
+        }
+
+        $contents = file_get_contents(
+            $manifestPath
+        );
+
+        if (false === $contents) {
+            throw new RuntimeException(
+                "Unable to read template manifest: {$slug}"
+            );
+        }
+
+        $manifest = json_decode(
+            $contents,
+            true
+        );
+
+        if (!is_array($manifest)) {
+            throw new RuntimeException(
+                "Invalid template manifest: {$slug}"
+            );
+        }
+
+        if (empty($manifest['slug'])) {
+            throw new RuntimeException(
+                "Template manifest is missing slug: {$slug}"
+            );
+        }
+
+        if ($manifest['slug'] !== $slug) {
+            throw new RuntimeException(
+                "Template slug mismatch: {$slug}"
+            );
+        }
+
+        if (empty($manifest['entry'])) {
+            throw new RuntimeException(
+                "Template manifest is missing entry: {$slug}"
+            );
+        }
+
+        return $manifest;
+    }
+
+    /**
+     * Install the template view.
+     */
+    private function installView(
+        string $entryPath,
+        string $slug
+    ): void {
         if (!is_dir($this->viewsPath)) {
             mkdir(
                 $this->viewsPath,
@@ -93,53 +142,93 @@ class TemplateInstaller
             );
         }
 
-        if (!copy($entryPath, $viewPath)) {
+        $viewPath =
+            $this->viewsPath . '/' . $slug . '.php';
+
+        if (!copy(
+            $entryPath,
+            $viewPath
+        )) {
             throw new RuntimeException(
                 "Unable to install template view: {$slug}"
             );
         }
+    }
 
-        if (!empty($manifest['stylesheet'])) {
-            $stylesheetPath =
-                $templatePath . '/' . $manifest['stylesheet'];
+    /**
+     * Install the complete template asset directory.
+     */
+    private function installAssets(
+        string $templatePath,
+        string $slug
+    ): void {
+        $sourcePath =
+            $templatePath . '/assets';
 
-            if (!is_file($stylesheetPath)) {
-                throw new RuntimeException(
-                    "Template stylesheet not found: {$slug}"
-                );
+        if (!is_dir($sourcePath)) {
+            return;
+        }
+
+        $destinationPath =
+            $this->assetsPath . '/' . $slug;
+
+        $this->copyDirectory(
+            $sourcePath,
+            $destinationPath
+        );
+    }
+
+    /**
+     * Recursively copy a directory.
+     */
+    private function copyDirectory(
+        string $source,
+        string $destination
+    ): void {
+        if (!is_dir($destination)) {
+            mkdir(
+                $destination,
+                0755,
+                true
+            );
+        }
+
+        $items = scandir($source);
+
+        if (false === $items) {
+            throw new RuntimeException(
+                "Unable to read template assets."
+            );
+        }
+
+        foreach ($items as $item) {
+
+            if ('.' === $item || '..' === $item) {
+                continue;
             }
 
-            $relativeStylesheet = $manifest['stylesheet'];
+            $sourcePath =
+                $source . '/' . $item;
 
-            $targetStylesheet =
-                $this->assetsPath . '/' . $slug . '/' .
-                ltrim(
-                    preg_replace(
-                        '#^assets/#',
-                        '',
-                        $relativeStylesheet
-                    ),
-                    '/'
+            $destinationPath =
+                $destination . '/' . $item;
+
+            if (is_dir($sourcePath)) {
+
+                $this->copyDirectory(
+                    $sourcePath,
+                    $destinationPath
                 );
 
-            $targetDirectory = dirname(
-                $targetStylesheet
-            );
-
-            if (!is_dir($targetDirectory)) {
-                mkdir(
-                    $targetDirectory,
-                    0755,
-                    true
-                );
+                continue;
             }
 
             if (!copy(
-                $stylesheetPath,
-                $targetStylesheet
+                $sourcePath,
+                $destinationPath
             )) {
                 throw new RuntimeException(
-                    "Unable to install template stylesheet: {$slug}"
+                    "Unable to install template asset: {$item}"
                 );
             }
         }

@@ -4,6 +4,5 @@
     "version": "1.0.0",
     "description": "A decorative personal profile starter template.",
     "author": "Jaroa",
-    "entry": "template.php",
-    "stylesheet": "assets/css/profile.css"
+    "entry": "template.php"
 }
