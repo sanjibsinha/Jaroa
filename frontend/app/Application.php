@@ -85,7 +85,11 @@ class Application
         } catch (NotFoundException $exception) {
             http_response_code(404);
 
-            View::render('404');
+            View::render(
+                '404',
+                [],
+                'app'
+            );
 
             return null;
         }
