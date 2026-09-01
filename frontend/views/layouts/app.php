@@ -18,6 +18,19 @@
         >
 
     <?php endif; ?>
+<?php if (!empty($pageStylesheets)): ?>
+
+    <?php foreach ($pageStylesheets as $stylesheet): ?>
+
+        <link
+            rel="stylesheet"
+            href="<?= htmlspecialchars($stylesheet) ?>"
+        >
+
+    <?php endforeach; ?>
+
+<?php endif; ?>
+
 </head>
 
 <body>
