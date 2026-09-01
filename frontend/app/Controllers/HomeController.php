@@ -34,13 +34,25 @@ class HomeController
             3
         );
 
+        $activeTemplate =
+            $this->templateManager->active();
+
+        $activeTemplateUrl =
+            null !== $activeTemplate
+                ? $this->templateManager->showcase(
+                    $activeTemplate
+                )
+                : null;
+
         View::render(
             'home',
             [
                 'posts' => $posts,
                 'apps' => $this->appService->all(),
                 'activeTemplate' =>
-                    $this->templateManager->active(),
+                    $activeTemplate,
+                'activeTemplateUrl' =>
+                    $activeTemplateUrl,
             ]
         );
     }

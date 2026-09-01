@@ -48,12 +48,18 @@ $pageDescription =
 
                 <?php if (null !== $activeTemplate): ?>
 
-                    <a
-                        class="jaroa-button"
-                        href="/profile"
-                    >
-                        Show My Site
-                    </a>
+                    <?php if (!empty($activeTemplateUrl)): ?>
+
+                        <a
+                            class="jaroa-button"
+                            href="<?= htmlspecialchars(
+                                $activeTemplateUrl
+                            ) ?>"
+                        >
+                            Show My Site
+                        </a>
+
+                    <?php endif; ?>
 
                 <?php endif; ?>
 
