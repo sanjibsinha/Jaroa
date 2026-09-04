@@ -1,23 +1,57 @@
 <?php
 
-$pageTitle = '404 - Page Not Found';
-$pageDescription = 'The page you requested could not be found.';
+$pageTitle = '404 · Page Not Found';
+
+$pageDescription =
+    'The page you requested could not be found.';
+
+$pageStylesheets = [
+    '/assets/css/jaroa-404.css',
+];
+
+$showSiteFooter = false;
 ?>
 
-<section>
+<section class="error-page">
 
-    <h1>404</h1>
+    <div class="error-card">
 
-    <h2>Page Not Found</h2>
+        <p class="error-code">
+            404
+        </p>
 
-    <p>
-        <?= htmlspecialchars($pageDescription) ?>
-    </p>
+        <p class="error-label">
+            Jaroa · Page Not Found
+        </p>
 
-    <p>
-        <a href="/">
-            Back to <?= htmlspecialchars($appName) ?>
+        <h1>
+            This page wandered off somewhere.
+        </h1>
+
+        <p class="error-message">
+            The address you requested does not exist
+            in this Jaroa application. The rest of the
+            application is still right where we left it.
+        </p>
+
+        <a
+            class="error-action"
+            href="/"
+        >
+            ← Back to Jaroa
         </a>
-    </p>
+
+        <div
+            class="error-mark"
+            aria-hidden="true"
+        >
+            J
+        </div>
+
+        <div class="error-footer">
+            Keep exploring
+        </div>
+
+    </div>
 
 </section>

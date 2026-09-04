@@ -11,6 +11,7 @@ use App\Services\AppService;
 use App\Services\PostService;
 use App\Controllers\TemplateController;
 use App\Controllers\TemplateShowcaseController;
+use App\Templates\TemplateInstaller;
 use App\Templates\TemplateManager;
 
 class Application
@@ -43,7 +44,13 @@ class Application
 
         $templateManager = new TemplateManager(
             __DIR__ . '/../templates',
+            __DIR__ . '/../site/themes',
             __DIR__ . '/../storage/active-template'
+        );
+
+        $templateInstaller = new TemplateInstaller(
+            __DIR__ . '/../templates',
+            __DIR__ . '/../site/themes'
         );
 
         View::setTemplateManager(
@@ -56,12 +63,18 @@ class Application
          * Template installer.
          */
         $templateController = new TemplateController(
-            $templateManager
+            $templateManager,
+            $templateInstaller
         );
 
         $this->router->get(
             '/templates',
             [$templateController, 'index']
+        );
+
+        $this->router->post(
+            '/templates/install/{slug}',
+            [$templateController, 'install']
         );
 
         $this->router->post(

@@ -65,7 +65,7 @@ class View
         }
 
         self::renderFile(
-            self::viewPath($template),
+            self::templatePath($template),
             $data
         );
     }
@@ -90,7 +90,7 @@ class View
         }
 
         self::renderFile(
-            self::viewPath($slug),
+            self::templatePath($slug),
             $data
         );
     }
@@ -129,7 +129,7 @@ class View
     }
 
     /**
-     * Resolve a normal view path.
+     * Resolve a normal application view path.
      */
     private static function viewPath(
         string $view
@@ -147,5 +147,32 @@ class View
         }
 
         return $viewPath;
+    }
+
+    /**
+     * Resolve an installed theme template path.
+     */
+    private static function templatePath(
+        string $slug
+    ): string {
+        if (null === self::$templateManager) {
+            throw new RuntimeException(
+                'Template manager has not been configured.'
+            );
+        }
+
+        $themePath =
+            __DIR__ .
+            '/../site/themes/' .
+            $slug .
+            '/template.php';
+
+        if (!is_file($themePath)) {
+            throw new RuntimeException(
+                "Installed template not found: {$slug}"
+            );
+        }
+
+        return $themePath;
     }
 }

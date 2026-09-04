@@ -8,27 +8,19 @@ class TemplateInstaller
 {
     private string $templatesPath;
 
-    private string $viewsPath;
-
-    private string $assetsPath;
+    private string $themesPath;
 
     public function __construct(
         string $templatesPath,
-        string $viewsPath,
-        string $assetsPath
+        string $themesPath
     ) {
         $this->templatesPath = rtrim(
             $templatesPath,
             '/'
         );
 
-        $this->viewsPath = rtrim(
-            $viewsPath,
-            '/'
-        );
-
-        $this->assetsPath = rtrim(
-            $assetsPath,
+        $this->themesPath = rtrim(
+            $themesPath,
             '/'
         );
     }
@@ -59,12 +51,7 @@ class TemplateInstaller
             );
         }
 
-        $this->installView(
-            $entryPath,
-            $slug
-        );
-
-        $this->installAssets(
+        $this->installTheme(
             $templatePath,
             $slug
         );
@@ -128,52 +115,21 @@ class TemplateInstaller
     }
 
     /**
-     * Install the template view.
+     * Install the complete template into the editable theme directory.
      */
-    private function installView(
-        string $entryPath,
-        string $slug
-    ): void {
-        if (!is_dir($this->viewsPath)) {
-            mkdir(
-                $this->viewsPath,
-                0755,
-                true
-            );
-        }
-
-        $viewPath =
-            $this->viewsPath . '/' . $slug . '.php';
-
-        if (!copy(
-            $entryPath,
-            $viewPath
-        )) {
-            throw new RuntimeException(
-                "Unable to install template view: {$slug}"
-            );
-        }
-    }
-
-    /**
-     * Install the complete template asset directory.
-     */
-    private function installAssets(
+    private function installTheme(
         string $templatePath,
         string $slug
     ): void {
-        $sourcePath =
-            $templatePath . '/assets';
+        $destinationPath =
+            $this->themesPath . '/' . $slug;
 
-        if (!is_dir($sourcePath)) {
+        if (is_dir($destinationPath)) {
             return;
         }
 
-        $destinationPath =
-            $this->assetsPath . '/' . $slug;
-
         $this->copyDirectory(
-            $sourcePath,
+            $templatePath,
             $destinationPath
         );
     }

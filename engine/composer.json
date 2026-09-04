@@ -1,0 +1,20 @@
+{
+    "name": "jaroa/engine",
+    "description": "Jaroa native PHP backend engine",
+    "type": "project",
+    "require": {
+        "php": "^8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jaroa\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jaroa\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

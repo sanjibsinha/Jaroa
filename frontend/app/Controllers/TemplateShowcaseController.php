@@ -46,11 +46,7 @@ class TemplateShowcaseController
             $slug,
             [
                 'template' => $template,
-                'profile' => [
-                    'name' => 'Sanjib Deb Sinha',
-                    'role' => 'Writer · Developer · AI Hobbyist',
-                    'bio' => 'Exploring ideas, technology, writing and the spaces where they meet.',
-                ],
+                'profile' => ProfileController::data(),
             ]
         );
     }

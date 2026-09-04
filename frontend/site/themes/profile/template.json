@@ -1,0 +1,9 @@
+{
+    "name": "Profile",
+    "slug": "profile",
+    "version": "1.0.0",
+    "description": "A decorative personal profile starter template.",
+    "author": "Jaroa",
+    "entry": "template.php",
+    "showcase": "/profile"
+}

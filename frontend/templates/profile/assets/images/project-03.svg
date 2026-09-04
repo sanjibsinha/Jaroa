@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+<rect width="1200" height="760" fill="#c9c0b0"/>
+<g fill="none" stroke="#1a1917" stroke-width="3">
+<circle cx="600" cy="380" r="240"/>
+<circle cx="600" cy="380" r="165"/>
+<circle cx="600" cy="380" r="90"/>
+<path d="M130 380h940M600 70v620"/>
+<path d="M430 210l340 340M770 210L430 550"/>
+</g>
+<circle cx="600" cy="380" r="26" fill="#1a1917"/>
+<text x="70" y="95" font-family="monospace" font-size="17" letter-spacing="5" fill="#1a1917">COMMON GROUND</text>
+<text x="70" y="690" font-family="serif" font-size="50" fill="#1a1917">People / Machines / Place</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+<defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d9d0c0"/>
+        <stop offset="1" stop-color="#5e5a52"/>
+    </linearGradient>
+    <radialGradient id="r" cx=".5" cy=".35" r=".6">
+        <stop offset="0" stop-color="#f0eadf"/>
+        <stop offset="1" stop-color="#91897a"/>
+    </radialGradient>
+</defs>
+<rect width="800" height="1000" fill="url(#g)"/>
+<circle cx="415" cy="380" r="255" fill="url(#r)" opacity=".95"/>
+<path d="M166 1000c20-210 125-340 250-340s230 130 250 340z" fill="#191815"/>
+<path d="M275 350c5-150 92-245 192-245 130 0 190 122 153 277-23-88-79-130-163-135-61 48-111 69-182 103z" fill="#24221e"/>
+<ellipse cx="405" cy="395" rx="115" ry="150" fill="#b5aa99"/>
+<path d="M314 388c26-28 60-43 94-41m47 0c35-2 68 13 91 41" fill="none" stroke="#4a463f" stroke-width="9" stroke-linecap="round"/>
+<circle cx="368" cy="405" r="8" fill="#25231f"/><circle cx="448" cy="405" r="8" fill="#25231f"/>
+<path d="M384 485c28 16 55 16 82 0" fill="none" stroke="#5d574d" stroke-width="7" stroke-linecap="round"/>
+<path d="M250 600c88 42 190 48 302 0" fill="none" stroke="#d6ccbc" stroke-width="3" opacity=".7"/>
+<text x="54" y="930" fill="#f4eee3" font-family="monospace" font-size="22" letter-spacing="5">PROFILE / 01</text>
+</svg>

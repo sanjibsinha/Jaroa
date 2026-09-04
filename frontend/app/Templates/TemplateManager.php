@@ -8,14 +8,22 @@ class TemplateManager
 {
     private string $templatesPath;
 
+    private string $themesPath;
+
     private string $activeTemplatePath;
 
     public function __construct(
         string $templatesPath,
+        string $themesPath,
         string $activeTemplatePath
     ) {
         $this->templatesPath = rtrim(
             $templatesPath,
+            '/'
+        );
+
+        $this->themesPath = rtrim(
+            $themesPath,
             '/'
         );
 
@@ -129,17 +137,11 @@ class TemplateManager
     public function isInstalled(
         string $slug
     ): bool {
-        foreach ($this->available() as $template) {
+        $themePath =
+            $this->themesPath . '/' . $slug;
 
-            if (
-                isset($template['slug']) &&
-                $template['slug'] === $slug
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return is_dir($themePath) &&
+            is_file($themePath . '/template.json');
     }
 
     /**

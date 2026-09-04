@@ -9,287 +9,435 @@ $installedSlugs = array_map(
     $installedTemplates
 );
 
-$pageTitle = $appName . ' · Templates';
-$pageDescription = 'Choose a starter template for your Jaroa application.';
+$pageTitle = $appName . ' · Themes';
+$pageDescription =
+    'Choose, install and activate the visual identity of your Jaroa application.';
 
-$showSiteHeader = true;
-$showSiteFooter = true;
+$showSiteHeader = false;
+$showSiteFooter = false;
+
+$pageStylesheets = [
+    '/assets/css/jaroa-templates.css',
+];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<div class="jaroa-themes-page">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <header class="themes-header">
 
-    <title><?= htmlspecialchars($pageTitle) ?></title>
+        <div class="themes-topline">
 
-    <meta
-        name="description"
-        content="<?= htmlspecialchars($pageDescription) ?>"
-    >
+            <a class="themes-wordmark" href="/">
+                <span class="themes-wordmark-mark">J</span>
+                <span>Jaroa</span>
+            </a>
 
-    <style>
-        .site-header {
-            display: flex;
-            align-items: center;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1.5rem 1.5rem 0;
-        }
+            <div class="themes-topline-meta">
+                <span>Theme Manager</span>
+                <span>01</span>
+            </div>
 
-        .site-header a {
-            color: #171717;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-        }
+        </div>
 
-        .site-header a:hover {
-            text-decoration: underline;
-        }
 
-        .site-footer {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 3rem;
-            border-top: 1px solid #ddd;
-            color: #777;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
+        <div class="themes-intro">
 
-        body {
-            margin: 0;
-            font-family:
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-            background: #f5f5f5;
-            color: #171717;
-        }
+            <div class="themes-intro-label">
+                <span>01</span>
+                Visual identity
+            </div>
 
-        .templates-page {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 4rem 1.5rem 5rem;
-        }
+            <h1>
+                Choose how
+                <em>Jaroa looks.</em>
+            </h1>
 
-        .templates-header {
-            margin-bottom: 3rem;
-        }
+            <p>
+                Install a starter theme, make it your own,
+                and activate it when you are ready.
+                Your application core stays exactly where it is.
+            </p>
 
-        .templates-header h1 {
-            margin: 0;
-            font-size: clamp(2.5rem, 7vw, 5rem);
-            line-height: 0.95;
-            letter-spacing: -0.05em;
-        }
-
-        .templates-header p {
-            max-width: 650px;
-            margin-top: 1.5rem;
-            color: #666;
-            line-height: 1.7;
-        }
-
-        .template-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-            gap: 1.5rem;
-        }
-
-        .template-card {
-            padding: 2rem;
-            border: 1px solid #ddd;
-            border-radius: 24px;
-            background: #fff;
-        }
-
-        .template-card h2 {
-            margin: 0;
-            font-size: 1.75rem;
-        }
-
-        .template-card p {
-            color: #666;
-            line-height: 1.7;
-        }
-
-        .template-status {
-            display: inline-block;
-            margin: 1rem 0;
-            padding: 0.4rem 0.7rem;
-            border-radius: 999px;
-            background: #eee;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .template-action {
-            display: inline-block;
-            margin-top: 0.75rem;
-            padding: 0.7rem 1rem;
-            border: 1px solid #171717;
-            border-radius: 999px;
-            color: #171717;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .template-action:hover {
-            background: #171717;
-            color: #fff;
-        }
-
-        .template-action {
-            font: inherit;
-            cursor: pointer;
-        }
-
-        form {
-            margin: 0;
-        }
-
-        .template-active {
-            background: #171717;
-            color: #fff;
-        }
-
-        @media (max-width: 700px) {
-            .template-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<main class="templates-page">
-
-    <header class="templates-header">
-
-        <h1>
-            Jaroa Templates
-        </h1>
-
-        <p>
-            Choose a starter template for your Jaroa application.
-            Templates can be installed and activated independently
-            from the application core.
-        </p>
+        </div>
 
     </header>
 
-    <section class="template-grid">
 
-        <?php foreach ($templates as $template): ?>
+    <main>
 
-            <?php
-            $slug = $template['slug'];
-            $name = $template['name'];
-            $description = $template['description'] ?? '';
+        <section class="themes-current">
 
-            $isInstalled =
-                in_array(
-                    $slug,
-                    $installedSlugs,
-                    true
-                );
+            <div class="themes-section-label">
+                <span>02</span>
+                Current workspace
+            </div>
 
-            $isActive =
-                $slug === $activeTemplate;
-            ?>
+            <div class="themes-current-panel">
 
-            <article class="template-card">
+                <div class="themes-current-copy">
 
-                <h2>
-                    <?= htmlspecialchars($name) ?>
-                </h2>
+                    <p class="themes-overline">
+                        ACTIVE THEME
+                    </p>
 
-                <p>
-                    <?= htmlspecialchars($description) ?>
-                </p>
+                    <?php if (null !== $activeTemplate): ?>
 
-                <?php if ($isActive): ?>
+                        <h2>
+                            <?= htmlspecialchars(
+                                ucfirst($activeTemplate)
+                            ) ?>
+                        </h2>
 
-                    <span class="template-status template-active">
-                        Active
-                    </span>
+                        <p>
+                            This theme is currently powering the
+                            presentation layer of your Jaroa application.
+                        </p>
 
-                    <br>
+                    <?php else: ?>
 
-                    <?php if (!empty($template['showcase'])): ?>
+                        <h2>
+                            No active theme.
+                        </h2>
 
-                        <a
-                            class="template-action"
-                            href="<?= htmlspecialchars(
-                                $template['showcase']
-                            ) ?>"
-                        >
-                            Show Me
-                        </a>
+                        <p>
+                            Install a starter theme and activate it
+                            to give your application a visual identity.
+                        </p>
 
                     <?php endif; ?>
 
-                <?php elseif ($isInstalled): ?>
+                </div>
 
-                    <span class="template-status">
-                        Installed
-                    </span>
 
-                    <br>
+                <div class="themes-current-action">
 
-                    <form
-                        method="post"
-                        action="/templates/activate/<?= rawurlencode($slug) ?>"
-                    >
-                        <button
-                            class="template-action"
-                            type="submit"
-                        >
-                            Activate
-                        </button>
-                    </form>
+                    <?php if (null !== $activeTemplate): ?>
 
-                <?php else: ?>
+                        <?php
+                        $activeManifest = null;
 
-                    <span class="template-status">
-                        Available
-                    </span>
+                        foreach ($templates as $template) {
+                            if (
+                                isset($template['slug']) &&
+                                $template['slug'] === $activeTemplate
+                            ) {
+                                $activeManifest = $template;
+                                break;
+                            }
+                        }
+                        ?>
 
-                    <br>
+                        <?php if (
+                            is_array($activeManifest) &&
+                            !empty($activeManifest['showcase'])
+                        ): ?>
+
+                            <a
+                                class="themes-primary-button"
+                                href="<?= htmlspecialchars(
+                                    $activeManifest['showcase']
+                                ) ?>"
+                            >
+                                Show My Site <span>↗</span>
+                            </a>
+
+                        <?php endif; ?>
+
+                    <?php endif; ?>
 
                     <a
-                        class="template-action"
-                        href="#"
+                        class="themes-secondary-button"
+                        href="/"
                     >
-                        Install
+                        Back to Jaroa <span>↗</span>
                     </a>
 
-                <?php endif; ?>
+                </div>
 
-            </article>
+            </div>
 
-        <?php endforeach; ?>
+        </section>
 
-    </section>
 
-</main>
+        <section class="themes-collection">
 
-</body>
-</html>
+            <div class="themes-collection-heading">
+
+                <div>
+
+                    <div class="themes-section-label">
+                        <span>03</span>
+                        Starter collection
+                    </div>
+
+                    <h2>
+                        Four starting points.
+                    </h2>
+
+                </div>
+
+                <p>
+                    Installation creates your editable theme.
+                    Activation decides which one your visitors see.
+                </p>
+
+            </div>
+
+
+            <div class="themes-grid">
+
+                <?php foreach ($templates as $index => $template): ?>
+
+                    <?php
+                    $slug = $template['slug'] ?? '';
+                    $name = $template['name'] ?? ucfirst($slug);
+                    $description = $template['description'] ?? '';
+                    $showcase = $template['showcase'] ?? null;
+
+                    $isInstalled =
+                        in_array(
+                            $slug,
+                            $installedSlugs,
+                            true
+                        );
+
+                    $isActive =
+                        $slug === $activeTemplate;
+
+                    $number = str_pad(
+                        (string) ($index + 1),
+                        2,
+                        '0',
+                        STR_PAD_LEFT
+                    );
+                    ?>
+
+                    <article
+                        class="theme-card theme-card-<?= htmlspecialchars(
+                            $slug
+                        ) ?>"
+                    >
+
+                        <div class="theme-card-art" aria-hidden="true">
+
+                            <span class="theme-card-number">
+                                <?= htmlspecialchars($number) ?>
+                            </span>
+
+                            <span class="theme-card-letter">
+                                <?= htmlspecialchars(
+                                    strtoupper(
+                                        substr($name, 0, 1)
+                                    )
+                                ) ?>
+                            </span>
+
+                            <span class="theme-card-orbit"></span>
+
+                        </div>
+
+
+                        <div class="theme-card-body">
+
+                            <div class="theme-card-status-row">
+
+                                <?php if ($isActive): ?>
+
+                                    <span class="theme-status theme-status-active">
+                                        Active
+                                    </span>
+
+                                <?php elseif ($isInstalled): ?>
+
+                                    <span class="theme-status">
+                                        Installed
+                                    </span>
+
+                                <?php else: ?>
+
+                                    <span class="theme-status">
+                                        Available
+                                    </span>
+
+                                <?php endif; ?>
+
+                            </div>
+
+
+                            <h3>
+                                <?= htmlspecialchars($name) ?>
+                            </h3>
+
+                            <p>
+                                <?= htmlspecialchars($description) ?>
+                            </p>
+
+
+                            <div class="theme-card-actions">
+
+                                <?php if ($isActive): ?>
+
+                                    <?php if (!empty($showcase)): ?>
+
+                                        <a
+                                            class="theme-action theme-action-primary"
+                                            href="<?= htmlspecialchars(
+                                                $showcase
+                                            ) ?>"
+                                        >
+                                            Show Me <span>↗</span>
+                                        </a>
+
+                                    <?php endif; ?>
+
+
+                                <?php elseif ($isInstalled): ?>
+
+                                    <?php if (!empty($showcase)): ?>
+
+                                        <a
+                                            class="theme-action theme-action-secondary"
+                                            href="<?= htmlspecialchars(
+                                                $showcase
+                                            ) ?>"
+                                        >
+                                            Preview <span>↗</span>
+                                        </a>
+
+                                    <?php endif; ?>
+
+
+                                    <form
+                                        method="post"
+                                        action="/templates/activate/<?= rawurlencode(
+                                            $slug
+                                        ) ?>"
+                                    >
+                                        <button
+                                            class="theme-action theme-action-primary"
+                                            type="submit"
+                                        >
+                                            Activate
+                                        </button>
+                                    </form>
+
+
+                                <?php else: ?>
+
+                                    <form
+                                        method="post"
+                                        action="/templates/install/<?= rawurlencode(
+                                            $slug
+                                        ) ?>"
+                                    >
+                                        <button
+                                            class="theme-action theme-action-primary"
+                                            type="submit"
+                                        >
+                                            Install
+                                        </button>
+                                    </form>
+
+                                <?php endif; ?>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        </section>
+
+
+        <section class="themes-flow">
+
+            <div class="themes-section-label">
+                <span>04</span>
+                Theme lifecycle
+            </div>
+
+            <div class="themes-flow-grid">
+
+                <div class="themes-flow-step">
+                    <span>01</span>
+                    <strong>Available</strong>
+                    <p>
+                        A pristine starter lives in the
+                        Jaroa template library.
+                    </p>
+                </div>
+
+                <div class="themes-flow-line"></div>
+
+                <div class="themes-flow-step">
+                    <span>02</span>
+                    <strong>Installed</strong>
+                    <p>
+                        A private editable copy is created
+                        inside your site workspace.
+                    </p>
+                </div>
+
+                <div class="themes-flow-line"></div>
+
+                <div class="themes-flow-step">
+                    <span>03</span>
+                    <strong>Active</strong>
+                    <p>
+                        Your chosen installed theme becomes
+                        the site's presentation layer.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="themes-closing">
+
+            <div class="themes-closing-mark">
+                J
+            </div>
+
+            <p class="themes-overline">
+                JAROA / THEMES
+            </p>
+
+            <h2>
+                The core stays.
+                <em>The character changes.</em>
+            </h2>
+
+            <a href="/">
+                Return to Jaroa <span>↗</span>
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <footer class="themes-footer">
+
+        <div class="themes-footer-brand">
+            <strong>Jaroa</strong>
+            <span>Theme Manager</span>
+        </div>
+
+        <a href="/">
+            Home <span>↗</span>
+        </a>
+
+        <div class="themes-footer-bottom">
+            <span>© 2026 Jaroa</span>
+            <span>Headless PHP · WordPress · Themes</span>
+        </div>
+
+    </footer>
+
+</div>

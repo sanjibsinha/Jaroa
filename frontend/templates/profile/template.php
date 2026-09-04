@@ -12,12 +12,25 @@ $pageStylesheets = [
 
 <section class="profile">
 
-    <div class="profile-hero">
+    <nav class="profile-nav" aria-label="Profile navigation">
+        <a class="profile-nav-brand" href="/">
+            <?= htmlspecialchars($profile['name']) ?>
+        </a>
+
+        <div class="profile-nav-links">
+            <a href="#about">About</a>
+            <a href="#work">Work</a>
+            <a href="#writing">Writing</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+
+    <header class="profile-hero">
 
         <div class="profile-hero-content">
-
             <p class="profile-eyebrow">
-                Jaroa Starter Template
+                Independent writer &amp; creative technologist
             </p>
 
             <h1>
@@ -32,90 +45,262 @@ $pageStylesheets = [
                 <?= htmlspecialchars($profile['bio']) ?>
             </p>
 
+            <div class="profile-hero-meta">
+                <span><?= htmlspecialchars($profile['location']) ?></span>
+                <span><?= htmlspecialchars($profile['availability']) ?></span>
+            </div>
         </div>
 
-        <div class="profile-mark" aria-hidden="true">
-            <span>J</span>
+        <div class="profile-hero-image">
+            <img
+                src="<?= htmlspecialchars($profile['hero_image']) ?>"
+                alt="Editorial portrait artwork"
+            >
         </div>
 
-    </div>
+    </header>
 
 
-    <div class="profile-grid">
+    <section class="profile-about" id="about">
 
-        <section class="profile-card profile-about">
+        <div class="profile-section-label">
+            <span>01</span>
+            About
+        </div>
 
-            <p class="card-label">
-                About
-            </p>
+        <div class="profile-about-content">
+
+            <div>
+                <h2>
+                    A little about<br>
+                    the work.
+                </h2>
+            </div>
+
+            <div class="profile-about-copy">
+                <p class="profile-lead">
+                    I work across writing, software and creative technology,
+                    usually somewhere between the obvious solution and the
+                    interesting one.
+                </p>
+
+                <p>
+                    My work begins with questions. How should an idea move
+                    through a system? What makes a digital experience feel
+                    human? And what happens when technology gives curiosity
+                    somewhere new to go?
+                </p>
+
+                <div class="profile-facts">
+                    <div>
+                        <span>Based in</span>
+                        <strong><?= htmlspecialchars($profile['location']) ?></strong>
+                    </div>
+                    <div>
+                        <span>Focus</span>
+                        <strong>Writing · Technology</strong>
+                    </div>
+                    <div>
+                        <span>Currently</span>
+                        <strong>Independent</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="profile-work" id="work">
+
+        <div class="profile-section-heading">
+            <div class="profile-section-label">
+                <span>02</span>
+                Selected work
+            </div>
+
+            <h2>Things I've made.</h2>
+        </div>
+
+        <div class="profile-projects">
+
+            <?php foreach ($profile['projects'] as $project): ?>
+
+                <article class="profile-project">
+
+                    <div class="profile-project-image">
+                        <img
+                            src="<?= htmlspecialchars($project['image']) ?>"
+                            alt="<?= htmlspecialchars($project['title']) ?>"
+                            loading="lazy"
+                        >
+                    </div>
+
+                    <div class="profile-project-info">
+                        <p class="profile-project-number">
+                            <?= htmlspecialchars($project['number']) ?>
+                        </p>
+
+                        <p class="profile-project-category">
+                            <?= htmlspecialchars($project['category']) ?>
+                        </p>
+
+                        <h3>
+                            <?= htmlspecialchars($project['title']) ?>
+                        </h3>
+
+                        <p>
+                            <?= htmlspecialchars($project['description']) ?>
+                        </p>
+
+                        <a href="#contact">
+                            Discuss a similar project <span>↗</span>
+                        </a>
+                    </div>
+
+                </article>
+
+            <?php endforeach; ?>
+
+        </div>
+
+    </section>
+
+
+    <section class="profile-expertise">
+
+        <div class="profile-section-label">
+            <span>03</span>
+            Expertise
+        </div>
+
+        <div class="profile-expertise-content">
 
             <h2>
-                Ideas are worth exploring.
+                Different tools.<br>
+                One curiosity.
             </h2>
 
-            <p>
-                This profile is a demonstration of the Jaroa
-                starter-template architecture. The presentation
-                belongs to the frontend, while the application
-                architecture remains independent underneath.
-            </p>
+            <div class="profile-expertise-list">
 
-            <p>
-                Writing, software, design and artificial intelligence
-                become different ways of asking the same question:
-                what can we build when an idea is given enough room
-                to breathe?
-            </p>
+                <?php foreach ($profile['expertise'] as $item): ?>
 
-        </section>
+                    <article class="profile-expertise-item">
+                        <span><?= htmlspecialchars($item['number']) ?></span>
+
+                        <div>
+                            <h3><?= htmlspecialchars($item['title']) ?></h3>
+                            <p><?= htmlspecialchars($item['text']) ?></p>
+                        </div>
+                    </article>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-        <section class="profile-card profile-interests">
+    <section class="profile-writing" id="writing">
 
-            <p class="card-label">
-                Interests
-            </p>
+        <div class="profile-section-heading">
+            <div class="profile-section-label">
+                <span>04</span>
+                From the notebook
+            </div>
 
-            <ul>
-                <li>Writing</li>
-                <li>Software Development</li>
-                <li>Artificial Intelligence</li>
-                <li>Design</li>
-                <li>Philosophy</li>
-                <li>Creative Technology</li>
-            </ul>
+            <h2>Recent thoughts.</h2>
+        </div>
 
-        </section>
+        <div class="profile-articles">
 
-    </div>
+            <?php foreach ($profile['articles'] as $article): ?>
+
+                <article class="profile-article">
+                    <div class="profile-article-meta">
+                        <span><?= htmlspecialchars($article['date']) ?></span>
+                        <span><?= htmlspecialchars($article['type']) ?></span>
+                    </div>
+
+                    <h3>
+                        <?= htmlspecialchars($article['title']) ?>
+                    </h3>
+
+                    <p>
+                        <?= htmlspecialchars($article['excerpt']) ?>
+                    </p>
+
+                    <a href="#contact" aria-label="Read <?= htmlspecialchars($article['title']) ?>">
+                        Read essay <span>↗</span>
+                    </a>
+                </article>
+
+            <?php endforeach; ?>
+
+        </div>
+
+    </section>
 
 
     <section class="profile-statement">
 
+        <p class="profile-statement-mark">“</p>
+
         <p>
-            “Build the application first.
-            Let the architecture reveal itself.”
+            <?= htmlspecialchars($profile['statement']) ?>
         </p>
 
     </section>
 
 
-    <section class="profile-footer">
+    <section class="profile-contact" id="contact">
 
-        <div>
-            <p class="card-label">
-                Built with
+        <div class="profile-section-label">
+            <span>05</span>
+            Get in touch
+        </div>
+
+        <div class="profile-contact-content">
+            <p class="profile-contact-kicker">
+                Have an idea?
             </p>
 
             <h2>
-                Jaroa
+                Let's make something
+                <em>worth remembering.</em>
             </h2>
+
+            <a class="profile-contact-link" href="mailto:<?= htmlspecialchars($profile['email']) ?>">
+                <?= htmlspecialchars($profile['email']) ?>
+                <span>↗</span>
+            </a>
         </div>
 
-        <a href="/">
-            Explore the application →
-        </a>
-
     </section>
+
+
+    <footer class="profile-footer">
+
+        <div>
+            <strong><?= htmlspecialchars($profile['name']) ?></strong>
+            <span>Writing · Technology · Ideas</span>
+        </div>
+
+        <div class="profile-footer-links">
+            <a href="#about">About</a>
+            <a href="#work">Work</a>
+            <a href="#writing">Writing</a>
+            <a href="#contact">Contact</a>
+        </div>
+
+        <div class="profile-footer-bottom">
+            <span>© 2026 <?= htmlspecialchars($profile['name']) ?></span>
+            <span>Powered by Jaroa</span>
+        </div>
+
+    </footer>
 
 </section>
