@@ -94,6 +94,17 @@ final class PostService
         return $this->repository->find($id);
     }
 
+    public function findBySlug(string $slug): ?Post
+    {
+        if (trim($slug) === '') {
+            throw new InvalidArgumentException(
+                'Post slug must not be empty.'
+            );
+        }
+
+        return $this->repository->findBySlug($slug);
+    }
+
     public function create(
         int $userId,
         string $title,

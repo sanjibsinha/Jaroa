@@ -133,27 +133,6 @@ final class PostsController
         ]);
     }
 
-    public function showBySlug(string $slug): JsonResponse
-    {
-        $post = $this->service->findBySlug($slug);
-
-        if ($post === null) {
-            return new JsonResponse(
-                [
-                    'error' => [
-                        'code' => 'not_found',
-                        'message' => 'Post not found.',
-                    ],
-                ],
-                404
-            );
-        }
-
-        return new JsonResponse([
-            'data' => $this->resource($post),
-        ]);
-    }
-
     public function delete(int $id): JsonResponse
     {
         try {

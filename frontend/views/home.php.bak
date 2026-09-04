@@ -14,7 +14,7 @@ $apps = $apps['data'] ?? [];
 
 $pageTitle = 'Jaroa';
 $pageDescription =
-    'A native PHP application platform with a dedicated API and presentation layer.';
+    'A headless PHP application platform with WordPress at its core.';
 ?>
 
 <div class="jaroa-home">
@@ -319,12 +319,12 @@ $pageDescription =
                         </p>
 
                         <h3>
-                            Jaroa Engine
+                            WordPress
                         </h3>
 
                         <p>
                             Posts, pages and editorial content live
-                            in a familiar headless Jaroa Engine backend.
+                            in a familiar headless WordPress backend.
                         </p>
                     </div>
 
@@ -399,7 +399,7 @@ $pageDescription =
                     </h2>
 
                     <p>
-                        Content comes from Jaroa Engine.
+                        Content comes from WordPress.
                         Jaroa decides how it reaches the reader.
                     </p>
 
@@ -510,7 +510,7 @@ $pageDescription =
 
         <div class="jaroa-footer-bottom">
             <span>© 2026 Jaroa</span>
-            <span>Built with PHP · Jaroa Engine · Jaroa</span>
+            <span>Built with PHP · WordPress · Jaroa</span>
         </div>
 
     </footer>

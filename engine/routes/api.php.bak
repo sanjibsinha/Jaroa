@@ -245,16 +245,6 @@ return function (
         [$postsController, 'show']
     );
 
-    $router->get(
-        '/api/v1/posts/slug/{slug}',
-        static function (array $parameters) use ($postsController): mixed {
-            return $postsController->showBySlug(
-                (string) $parameters['slug']
-            );
-        }
-    );
-
-
     /*
      * Editor/admin post creation.
      */

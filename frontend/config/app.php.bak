@@ -7,6 +7,6 @@ return [
 
     'api' => [
         'base_url' => getenv('JAROA_API_URL')
-            ?: 'https://jaroa-engine.ddev.site/api/v1',
+            ?: 'https://backend.ddev.site/wp-json/fullstack/v1',
     ],
 ];

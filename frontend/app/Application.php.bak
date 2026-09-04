@@ -89,6 +89,7 @@ class Application
          */
         $homeController = new HomeController(
             $this->postService,
+            $this->appService,
             $templateManager
         );
 

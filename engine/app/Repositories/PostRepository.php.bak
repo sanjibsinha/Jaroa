@@ -177,42 +177,6 @@ SQL
         return $this->mapToPost($row, true);
     }
 
-    public function findBySlug(string $slug): ?Post
-    {
-        $statement = $this->pdo->prepare(
-            <<<'SQL'
-SELECT
-    p.id,
-    p.user_id,
-    p.title,
-    p.slug,
-    p.content,
-    p.created_at,
-    p.updated_at,
-    u.id AS author_id,
-    u.name AS author_name,
-    u.email AS author_email,
-    u.role AS author_role
-FROM posts p
-LEFT JOIN users u ON u.id = p.user_id
-WHERE p.slug = :slug
-LIMIT 1
-SQL
-        );
-
-        $statement->execute([
-            'slug' => $slug,
-        ]);
-
-        $row = $statement->fetch();
-
-        if ($row === false) {
-            return null;
-        }
-
-        return $this->mapToPost($row, true);
-    }
-
     public function create(
         int $userId,
         string $title,
