@@ -1,0 +1,403 @@
+============================================================
+ JAROA / ENGINE PORT SOURCE INVESTIGATION
+============================================================
+
+===== 1. ENGINE DDEV STATUS =====
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Project: jaroa-engine ~/Jaroa/engine https://jaroa-engine.ddev.site                        │
+│ Docker platform: linux-docker                                                              │
+│ Router: traefik                                                                            │
+│ DDEV version: v1.25.2                                                                      │
+├──────────────┬─────────┬──────────────────────────────────────────────┬────────────────────┤
+│ SERVICE      │ STAT    │ URL/PORT                                     │ INFO               │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ web          │ [32mcreated[0m │ https://jaroa-engine.ddev.site               │ php PHP 8.4        │
+│              │         │ InDocker:                                    │ Server: nginx-fpm  │
+│              │         │  - web:80                                    │ Docroot: 'public'  │
+│              │         │  - web:443                                   │ Perf mode: none    │
+│              │         │  - web:8025                                  │ Node.js: 24        │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ db           │ [32mcreated[0m │ InDocker:                                    │ mariadb:11.8       │
+│              │         │  - db:3306                                   │ User/Pass: 'db/db' │
+│              │         │                                              │ or 'root/root'     │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ xhgui        │ [31mstopped[0m │ https://jaroa-engine.ddev.site:8142          │                    │
+│              │         │ InDocker:                                    │                    │
+│              │         │  - xhgui:80                                  │                    │
+│              │         │ Launch: ddev xhgui                           │                    │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ Mailpit      │         │ Mailpit: https://jaroa-engine.ddev.site:8026 │                    │
+│              │         │ Launch: ddev mailpit                         │                    │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ Project URLs │         │ https://jaroa-engine.ddev.site,              │                    │
+│              │         │ http://jaroa-engine.ddev.site                │                    │
+└──────────────┴─────────┴──────────────────────────────────────────────┴────────────────────┘
+
+
+===== 2. ENGINE CONFIG EFFECTIVE VALUES =====
+Create or modify a DDEV project configuration in the current directory
+
+Usage:
+  ddev config [global] [flags]
+  ddev config [command]
+
+Examples:
+"ddev config" or "ddev config --docroot=web --project-type=drupal11"
+
+Available Commands:
+  global      Change global configuration
+
+Flags:
+      --additional-fqdns string          Comma-delimited list of project FQDNs or --additional-fqdns="" to remove any configured FQDNs
+      --additional-hostnames string      Comma-delimited list of project hostnames or --additional-hostnames="" to remove any configured additional hostnames
+      --auto                             Automatically run config without prompting
+      --bind-all-interfaces              Bind host ports on all interfaces, not only on the localhost network interface
+      --composer-root string             The relative path, from the project root, to the directory containing composer.json (This is where all Composer-related commands are executed.)
+      --composer-root-default            Unsets a web service Composer root directory override, the same as --composer-root=""
+      --composer-version string          Specify override for Composer version in web container. This may be "", "2", "2.2", "stable", "preview", "snapshot" or a specific version (default "2")
+      --corepack-enable                  Whether to run 'corepack enable' on Node.js configuration
+      --database string                  Specify the database type:version to use (default "mariadb:11.8")
+      --db-working-dir string            Override the default working directory for the db service
+      --db-working-dir-default           Unset a db service working directory override, the same as --db-working-dir=""
+      --dbimage-extra-packages string    Comma-delimited list of Debian packages that should be added to db container when the project is started or --dbimage-extra-packages="" to remove previously configured packages
+      --ddev-version-constraint string   Specify a ddev_version_constraint to validate ddev against
+      --default-container-timeout int    Default time in seconds that DDEV waits for all containers to become ready on start (default 120)
+      --disable-settings-management      Prevent DDEV from creating or updating CMS settings files
+      --disable-upload-dirs-warning      Disable warnings about upload-dirs not being set when using --performance-mode=mutagen
+      --docroot string                   Provide the relative docroot of the project, like 'docroot' or 'htdocs' or 'web', defaults to empty, the current directory
+      --fail-on-hook-fail                Decide whether 'ddev start' should be interrupted by a failing hook
+  -h, --help                             help for config
+      --host-db-port string              The db container's localhost-bound port
+      --host-https-port string           The web container's localhost-bound HTTPS port
+      --host-webserver-port string       The web container's localhost-bound HTTP port
+      --mailpit-http-port string         Router HTTP port to be used for Mailpit HTTP access (default "8025")
+      --mailpit-https-port string        Router port to be used for Mailpit HTTPS access (default "8026")
+      --no-project-mount                 Whether to skip mounting project code into the web container
+      --nodejs-version string            Specify the Node.js version to use (default "24")
+      --omit-containers string           Comma-delimited list of container types that should not be started when the project is started
+      --performance-mode string          Performance optimization mode, possible values are "global", "none", "mutagen"
+      --performance-mode-reset           Reset performance mode to global configuration
+      --php-version string               PHP version that will be enabled in the web container (default "8.4")
+      --project-name string              Provide the project name of project to configure (normally the same as the last part of directory name)
+      --project-tld string               Set the top-level domain to be used for projects (default "ddev.site")
+      --project-type string              Provide the project type (one of asterios, backdrop, cakephp, codeigniter, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, drupal12, generic, joomla, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress, wp-bedrock). This is autodetected and this flag is necessary only to override the detection.
+      --router-http-port string          The router HTTP port for this project (default "80")
+      --router-https-port string         The router HTTPS port for this project (default "443")
+      --share-default-provider string    Default share provider for the project (ngrok, cloudflared, or custom)
+      --share-provider-args string       Provide extra args to share provider in ddev share
+      --show-config-location             Output the location of the .ddev/config.yaml file if it exists, or error that it doesn't exist
+      --timezone string                  Specify timezone for containers and PHP, like Europe/London or America/Denver or GMT or UTC. If unset, DDEV will attempt to derive it from the host system timezone
+      --update                           Update project settings based on detection and project-type overrides (except for 'generic' type)
+      --upload-dirs strings              Set the project's upload directories, the destination directories of the 'ddev import-files' command, or --upload-dirs="" to remove previously configured values
+      --use-dns-when-possible            Use DNS for hostname resolution instead of /etc/hosts when possible (default true)
+      --web-environment string           Set the environment variables in the web container: --web-environment="TYPO3_CONTEXT=Development,SOMEENV=someval" or --web-environment="" to remove any previously configured values
+      --web-environment-add string       Append environment variables to the web container: --web-environment-add="TYPO3_CONTEXT=Development,SOMEENV=someval"
+      --web-image string                 Set the web container image (for advanced use only)
+      --web-image-default                Sets the default web container image, the same as --web-image=""
+      --web-working-dir string           Override the default working directory for the web service
+      --web-working-dir-default          Unset a web service working directory override, the same as --web-working-dir=""
+      --webimage-extra-packages string   Comma-delimited list of Debian packages that should be added to web container when the project is started or --webimage-extra-packages="" to remove previously configured packages
+      --webserver-type string            Set the project's desired webserver type: nginx-fpm/apache-fpm/generic (default "nginx-fpm")
+      --working-dir-defaults             Unset all service working directory overrides
+      --xdebug-enabled                   Whether Xdebug is enabled in the web container
+      --xhprof-mode string               XHProf mode, possible values are "global", "prepend", "xhgui" (default "xhgui")
+      --xhprof-mode-reset                Reset XHProf mode to global configuration
+
+Global Flags:
+  -j, --json-output   If true, user-oriented output will be in JSON format.
+      --skip-hooks    If true, any hook normally run by the command will be skipped.
+
+Use "ddev config [command] --help" for more information about a command.
+
+===== 3. GENERATED ENGINE WEB PORT BLOCK =====
+        - /healthcheck.sh
+      timeout: 1m10s
+      interval: 1s
+      retries: 70
+      start_period: 2m0s
+      start_interval: 1s
+    image: ddev/ddev-dbserver-mariadb-11.8:v1.25.2-jaroa-engine-built
+    labels:
+      com.ddev.app-type: php
+      com.ddev.approot: /home/ss/Jaroa/engine
+      com.ddev.platform: ddev
+      com.ddev.site-name: jaroa-engine
+      com.ddev.webtag: v1.25.2
+    networks:
+      ddev_default: null
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 3306
+        published: "32772"
+        protocol: tcp
+    restart: "no"
+    stop_grace_period: 1m0s
+    user: 1000:1000
+    volumes:
+      - type: volume
+        source: database
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
+      - type: bind
+        source: /home/ss/Jaroa/engine/.ddev
+        target: /mnt/ddev_config
+        bind: {}
+      - type: bind
+
+===== 4. GLOBAL DDEV CONFIG =====
+fail_on_hook_fail: false
+instrumentation_opt_in: true
+internet_detection_timeout_ms: 3000
+last_started_version: v1.25.2
+letsencrypt_email: ""
+mkcert_caroot: /home/ss/.local/share/mkcert
+no_bind_mounts: false
+omit_containers: []
+performance_mode: none
+project_tld: ddev.site
+router_bind_all_interfaces: false
+router_http_port: "80"
+router_https_port: "443"
+mailpit_http_port: "8025"
+mailpit_https_port: "8026"
+xhgui_http_port: "8143"
+xhgui_https_port: "8142"
+simple_formatting: false
+table_style: default
+traefik_monitor_port: "10999"
+use_hardened_images: false
+use_letsencrypt: false
+wsl2_no_windows_hosts_mgt: false
+web_environment: []
+xdebug_ide_location: ""
+xhprof_mode: xhgui
+
+# You can turn off usage of the
+# ddev-ssh-agent and ddev-router containers with
+# omit_containers["ddev-ssh-agent", "ddev-router"]
+
+# You can opt in or out of sending instrumentation to the DDEV developers with
+# instrumentation_opt_in: true # or false
+#
+# Maximum number of collected events in the local queue. If reached, collected
+# data is sent.
+# instrumentation_queue_size: 100
+#
+# Reporting interval in hours. If the last report was longer ago, collected
+# data is sent.
+# instrumentation_reporting_interval: 24
+
+# last_started_version: ""
+# The last DDEV version that was started (informational only)
+
+# mkcert_caroot: ""
+# Absolute path to the directory containing mkcert certificates (from 'mkcert -CAROOT')
+
+# no_bind_mounts: false
+# Whether to disable Docker bind mounts
+
+# no_tui: false
+# Whether to disable the TUI (terminal user interface) when running the 'ddev' command without arguments
+
+# omit_project_name_by_default: false
+# If true, 'ddev config' will not write a 'name'' field
+# in '.ddev/config.yaml' unless you use --name=NAME.
+
+# omit_snapshot_on_delete: false
+# If true, 'ddev delete' will omit the database snapshot by default.
+# This can still be overridden per-command with --omit-snapshot=false.
+
+# performance_mode: "<default for the OS>"
+# DDEV offers performance optimization strategies to improve the filesystem
+# performance depending on your host system. Can be overridden with the project
+# config.
+#
+# Possible values are:
+#   - "none":    disables performance optimization.
+#   - "mutagen": enables Mutagen.
+#
+# See https://docs.ddev.com/en/stable/users/install/performance/#mutagen
+
+# You can set the global project_tld. This way any project will use this tld. If not
+# set the local project_tld is used, or the default of DDEV.
+# project_tld: ""
+#
+# You can inject environment variables into the web container with:
+# web_environment:
+#     - SOMEENV=somevalue
+#     - SOMEOTHERENV=someothervalue
+
+# Adjust the default table style used in ddev list and describe
+# table_style: default
+# table_style: bold
+# table_style: bright
+
+# Whether to disable most 'ddev list' and 'ddev describe' table formatting and implicitly set NO_COLOR=1.
+# simple_formatting: false
+
+# In unusual cases the default value to wait to detect internet availability is too short.
+# You can adjust this value higher to make it less likely that DDEV will declare internet
+# unavailable, but DDEV may wait longer on some commands. This should not be set below the default 3000
+# DDEV will ignore low values, as they're not useful
+# internet_detection_timeout_ms: 3000
+
+# You can enable 'ddev start' to be interrupted by a failing hook with
+# fail_on_hook_fail: true
+
+# router_http_port: "80"
+# Router port used for HTTP, can be overridden in project config
+
+# router_https_port: "443"
+# Router port used for HTTPS, can be overridden in project config
+
+# mailpit_http_port: "8025"
+# Router port used for Mailpit HTTP, can be overridden in project config
+
+# mailpit_https_port: "8026"
+# Router port used for Mailpit HTTPS, can be overridden in project config
+
+# xhprof_mode: [prepend|xhgui]
+# Default is "xhgui"
+
+# instrumentation_user: <your_username> # can be used to give DDEV specific info about who you are
+# developer_mode: true # (defaults to false) is not used widely at this time.
+# router_bind_all_interfaces: false  # (defaults to false)
+#    If true, ddev-router will bind http/s and Mailpit ports on all
+#    network interfaces instead of localhost, so others on your local network can
+#    access those ports. Note that this exposes the Mailpit ports as well, which
+#    can be a major security issue, so choose wisely.
+
+# use_hardened_images: false
+# With hardened images a container that is exposed to the internet is
+# a harder target, although not as hard as a fully-secured host.
+# sudo and mailpit are removed, and since the web container
+# is run only as the owning user, only project files might be changed
+# if a CMS or PHP bug allowed creating or altering files, and
+# permissions should not allow escalation.
+
+# xdebug_ide_location: ""
+# It's unusual to change this option, and we don’t recommend it.
+# Ask for help in one of our support channels before changing it unless you understand its use completely.
+# In some cases, especially WSL2, the IDE may be set up different ways
+# For example, if in WSL2 PhpStorm is running the Linux version inside WSL2
+# or if using JetBrains Gateway
+# then set xdebug_ide_location: "wsl2"
+# If using vscode language server, which listens inside the container
+# then set xdebug_ide_location: "container"
+
+# Lets Encrypt:
+# This integration is entirely experimental; your mileage may vary.
+# * Your host must be directly internet-connected.
+# * DNS for the hostname must be set to point to the host in question
+# * You must have router_bind_all_interfaces: true or else the Let's Encrypt Certbot
+#   process will not be able to process the IP address of the host (and nobody will be able to access your site)
+# * You will need to add a startup script to start your sites after a host reboot.
+# * If using several sites at a single top-level domain, you'll probably want to set
+#   project_tld to that top-level domain. Otherwise, you can use additional-hostnames or
+#   additional_fqdns.
+#
+# use_letsencrypt: false
+# (Experimental, only useful on an internet-based server)
+# Set to true if certificates are to be obtained via Certbot on https://letsencrypt.org/
+
+# letsencrypt_email: <email>
+# Email to be used for experimental letsencrypt certificates
+
+# fail_on_hook_fail: false
+# Decide whether 'ddev start' should be interrupted by a failing hook
+
+# traefik_monitor_port: "10999"
+# Change this only if you're having conflicts with some
+# service that needs port 10999
+
+# xhgui_http_port: "8143"
+# Router port used for XHGui HTTP, can be overridden in project config
+
+# xhgui_https_port: "8142"
+# Router port used for XHGui HTTPS, can be overridden in project config
+
+# wsl2_no_windows_hosts_mgt: false
+# It’s unusual to change this option, and we don’t recommend it.
+# On Windows, it may prevent site access when using a custom project_tld or working offline.
+# On WSL2 by default the Windows-side hosts file (normally C:\Windows\system32\drivers\etc\hosts)
+# is used for hosts file management, but doing that requires running sudo and ddev.exe on
+# Windows side; you may not want this if you're running your browser in WSL2 or for
+# various other reasons.
+
+# required_docker_compose_version: ""
+# This should only be used in specific cases like troubleshooting.
+# This can be used to override the default required docker-compose version
+# It should normally be left alone, but can be set to, for example, "v2.1.1"
+
+# use_docker_compose_from_path: false
+# This should only be used in specific cases like troubleshooting.
+# Whether to use the system-installed docker-compose instead of downloading a specific version
+
+# messages:
+#   ticker_interval: 20 // Interval in hours to show ticker messages, -1 disables the ticker
+# Controls the display of the ticker messages.
+
+# remote_config - Intended for debugging only, should not be changed.
+# Controls the download of the remote config and sponsorship data. Please do not change.
+#remote_config:
+#  update_interval: 24 # Interval in hours to download the remote config and sponsorship data
+#  remote_config_url: "https://raw.githubusercontent.com/ddev/remote-config/main/remote-config.jsonc"
+#  sponsorship_data_url: "https://ddev.com/s/sponsorship-data.json"
+#  addon_data_url: "https://addons.ddev.com/addons.json"
+
+===== 5. ENGINE LOCAL DDEV FILES =====
+engine/.ddev/addon-metadata/README.txt
+engine/.ddev/apache/apache-site.conf
+engine/.ddev/apache/README.apache.txt
+engine/.ddev/apache/seconddocroot.conf.example
+engine/.ddev/commands/.gitattributes
+engine/.ddev/config.yaml
+engine/.ddev/db-build/Dockerfile.example
+engine/.ddev/db-build/README.txt
+engine/.ddev/.dbimageBuild/Dockerfile
+engine/.ddev/.ddev-docker-compose-base.yaml
+engine/.ddev/.ddev-docker-compose-full.yaml
+engine/.ddev/.gitignore
+engine/.ddev/.homeadditions/bash_aliases.example
+engine/.ddev/homeadditions/bash_aliases.example
+engine/.ddev/.homeadditions/README.txt
+engine/.ddev/homeadditions/README.txt
+engine/.ddev/mysql/character-set.cnf.example
+engine/.ddev/mysql/max-packet.cnf.example
+engine/.ddev/mysql/README.txt
+engine/.ddev/nginx_full/nginx-site.conf
+engine/.ddev/nginx_full/README.nginx_full.txt
+engine/.ddev/nginx_full/seconddocroot.conf.example
+engine/.ddev/php/php-example.ini.example
+engine/.ddev/php/README.txt
+engine/.ddev/providers/acquia.yaml
+engine/.ddev/providers/git.yaml.example
+engine/.ddev/providers/lagoon.yaml
+engine/.ddev/providers/localfile.yaml.example
+engine/.ddev/providers/pantheon.yaml
+engine/.ddev/providers/platform.yaml
+engine/.ddev/providers/README.txt
+engine/.ddev/providers/rsync.yaml.example
+engine/.ddev/providers/upsun.yaml
+engine/.ddev/share-providers/cloudflared.sh
+engine/.ddev/share-providers/localtunnel.sh.example
+engine/.ddev/share-providers/ngrok.sh
+engine/.ddev/share-providers/README.txt
+engine/.ddev/web-build/Dockerfile.example
+engine/.ddev/web-build/README.txt
+engine/.ddev/web-entrypoint.d/README.txt
+engine/.ddev/.webimageBuild/Dockerfile
+engine/.ddev/xhprof/xhprof_prepend.php
+
+===== 6. SEARCH FOR 32768 =====
+engine/.ddev/.ddev-docker-compose-full.yaml:213:        published: "32768"
+
+===== 7. PROJECT PORT ENVIRONMENT =====
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:
+
+============================================================
+ INVESTIGATION COMPLETE
+============================================================

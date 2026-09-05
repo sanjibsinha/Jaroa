@@ -1,0 +1,33 @@
+============================================================
+ JAROA DDEV TLS DIAGNOSTIC
+============================================================
+
+===== HTTP ENGINE =====
+HTTP/1.1 404 Not Found
+Server: nginx
+Date: Sat, 05 Sep 2026 03:09:26 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+
+
+===== HTTPS ENGINE (NORMAL) =====
+curl: (60) SSL: no alternative certificate subject name matches target hostname 'jaroa-engine.ddev.site'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the webpage mentioned above.
+[31mFailed to execute command `curl -sS -I https://jaroa-engine.ddev.site/api/v1/status`: exit status 60[0m
+
+===== HTTPS ENGINE (-k) =====
+HTTP/1.1 404 Not Found
+Server: nginx
+Date: Sat, 05 Sep 2026 03:09:27 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+
+
+===== DNS FROM FRONTEND CONTAINER =====
+127.0.0.1       jaroa-engine.ddev.site

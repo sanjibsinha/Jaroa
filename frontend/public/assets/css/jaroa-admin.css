@@ -857,3 +857,373 @@ body.jaroa-admin-body {
         margin-top: 45px;
     }
 }
+
+/* ----------------------------------------------------------
+   Posts v0.1
+   ---------------------------------------------------------- */
+
+.admin-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-record-count {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--admin-border, #dcd8cf);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-page-intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-page-intro h2 {
+    max-width: 46rem;
+    margin: 0.35rem 0 0.7rem;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.02;
+}
+
+.admin-page-intro > div > p:last-child {
+    max-width: 42rem;
+    margin: 0;
+    line-height: 1.7;
+}
+
+.admin-posts-panel {
+    overflow: hidden;
+}
+
+.admin-post-table-wrap {
+    overflow-x: auto;
+}
+
+.admin-post-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-post-table th {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--admin-border, #dcd8cf);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.admin-post-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--admin-border, #e5e1d8);
+    vertical-align: middle;
+}
+
+.admin-post-table tbody tr {
+    transition:
+        background-color 160ms ease,
+        transform 160ms ease;
+}
+
+.admin-post-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+.admin-post-title-cell {
+    min-width: 16rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.admin-post-title-cell strong {
+    font-size: 0.98rem;
+}
+
+.admin-post-title-cell span,
+.admin-post-date {
+    font-size: 0.73rem;
+    opacity: 0.58;
+}
+
+.admin-post-table code {
+    display: inline-block;
+    max-width: 18rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.35rem;
+    background: rgba(0, 0, 0, 0.045);
+    font-size: 0.72rem;
+}
+
+.admin-post-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.7rem;
+    padding: 0 0.65rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.admin-post-status-published {
+    background: rgba(42, 122, 76, 0.11);
+    color: #277548;
+}
+
+.admin-post-status-draft {
+    background: rgba(140, 104, 32, 0.12);
+    color: #8a651f;
+}
+
+.admin-post-action-cell {
+    width: 3.5rem;
+    text-align: right;
+}
+
+.admin-empty-large {
+    display: flex;
+    min-height: 20rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+}
+
+.admin-empty-mark {
+    display: grid;
+    width: 4rem;
+    height: 4rem;
+    place-items: center;
+    margin-bottom: 1rem;
+    border: 1px solid var(--admin-border, #dcd8cf);
+    border-radius: 50%;
+    font-size: 1.8rem;
+}
+
+.admin-empty-large h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1.2rem;
+}
+
+.admin-empty-large p {
+    margin: 0 0 1.25rem;
+    opacity: 0.65;
+}
+
+.admin-post-editor-panel {
+    max-width: 68rem;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(11rem, 1fr);
+    gap: 1rem;
+}
+
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    border: 1px solid var(--admin-border, #dcd8cf);
+    border-radius: 0.65rem;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    outline: none;
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.admin-form select {
+    min-height: 3rem;
+    padding: 0 0.9rem;
+}
+
+.admin-form textarea {
+    min-height: 20rem;
+    padding: 1rem;
+    line-height: 1.7;
+    resize: vertical;
+}
+
+.admin-form select:focus,
+.admin-form textarea:focus {
+    border-color: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.admin-form-help {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    opacity: 0.58;
+}
+
+.admin-post-form {
+    gap: 1.25rem;
+}
+
+.admin-post-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+}
+
+@media (max-width: 760px) {
+    .admin-topbar-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-page-intro {
+        display: block;
+    }
+
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-post-form-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   Admin Post Actions v0.1
+   ---------------------------------------------------------- */
+
+.admin-recent-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.admin-recent-post {
+    padding: 0.95rem 0 0.95rem;
+    border-bottom: 1px solid var(--admin-border, #e5e1d8);
+}
+
+.admin-recent-post:last-child {
+    border-bottom: 0;
+    padding-bottom: 0.25rem;
+}
+
+.admin-recent-post .admin-list-row {
+    margin: 0;
+}
+
+.admin-post-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.7rem;
+    padding-left: 2.7rem;
+}
+
+.admin-post-actions form {
+    margin: 0;
+}
+
+.admin-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    padding: 0 0.7rem;
+    border: 1px solid var(--admin-border, #dcd8cf);
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+.admin-action-button:hover {
+    background: rgba(0, 0, 0, 0.055);
+}
+
+.admin-action-button-delete {
+    color: #9a3838;
+}
+
+.admin-action-button-delete:hover {
+    border-color: #9a3838;
+    background: rgba(154, 56, 56, 0.08);
+}
+
+.admin-post-form-footer > form {
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .admin-post-actions {
+        padding-left: 0;
+    }
+
+    .admin-post-actions,
+    .admin-post-form-footer {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   All Posts table actions
+   ---------------------------------------------------------- */
+
+.admin-table-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.admin-table-actions form {
+    margin: 0;
+}
+
+.admin-table-actions .admin-action-button {
+    min-width: 3.7rem;
+    min-height: 1.9rem;
+    padding: 0 0.65rem;
+    font-size: 0.66rem;
+}
+
+.admin-table-actions .admin-action-button-delete {
+    min-width: 4rem;
+}
+

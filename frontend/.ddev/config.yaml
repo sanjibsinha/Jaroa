@@ -12,7 +12,8 @@ database:
     version: "11.8"
 use_dns_when_possible: true
 composer_version: "2"
-web_environment: []
+web_environment:
+    - JAROA_API_URL=https://jaroa-engine.ddev.site/api/v1
 nodejs_version: "24"
 corepack_enable: false
 

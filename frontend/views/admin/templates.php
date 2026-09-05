@@ -37,10 +37,26 @@ $installedSlugs = array_map(
             </a>
 
             <a
+                class="admin-nav-link"
+                href="/admin/posts"
+            >
+                <span>02</span>
+                All Posts
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/posts/add"
+            >
+                <span>03</span>
+                Add Post
+            </a>
+
+            <a
                 class="admin-nav-link admin-nav-link-active"
                 href="/admin/templates"
             >
-                <span>02</span>
+                <span>04</span>
                 Templates
             </a>
 
@@ -50,7 +66,7 @@ $installedSlugs = array_map(
                 target="_blank"
                 rel="noopener"
             >
-                <span>03</span>
+                <span>05</span>
                 View Site
             </a>
 

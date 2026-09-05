@@ -1,0 +1,180 @@
+============================================================
+ JAROA POSTS v0.1 / FINAL VERIFICATION
+============================================================
+
+===== 1. ADMIN CONTROLLER =====
+178:    public function allPosts(
+205:    public function addPostForm(
+228:    public function createPost(
+252:            $this->renderAddPostError(
+267:            $slug = $this->makeSlug($title);
+271:            $this->renderAddPostError(
+321:            $this->renderAddPostError(
+338:    private function renderAddPostError(
+372:    private function makeSlug(
+
+===== 2. ADMIN ROUTES =====
+86:            '/admin/posts',
+87:            [$adminController, 'allPosts']
+91:            '/admin/posts/add',
+92:            [$adminController, 'addPostForm']
+96:            '/admin/posts/add',
+97:            [$adminController, 'createPost']
+
+===== 3. POST VIEWS =====
+-rw-rw-r-- 1 ss ss 7.9K Sep  5 06:30 frontend/views/admin/add-post.php
+-rw-rw-r-- 1 ss ss 9.7K Sep  5 06:30 frontend/views/admin/posts.php
+
+===== 4. SIDEBAR =====
+        <nav class="admin-nav">
+
+            <a
+                class="admin-nav-link admin-nav-link-active"
+                href="/admin"
+            >
+                <span>01</span>
+                Dashboard
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/posts"
+            >
+                <span>02</span>
+                All Posts
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/posts/add"
+            >
+                <span>03</span>
+                Add Post
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/templates"
+            >
+                <span>04</span>
+                Templates
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/"
+                target="_blank"
+                rel="noopener"
+            >
+                <span>05</span>
+                View Site
+            </a>
+
+        </nav>
+
+===== 5. TEMPLATES SIDEBAR =====
+        <nav class="admin-nav">
+
+            <a
+                class="admin-nav-link"
+                href="/admin"
+            >
+                <span>01</span>
+                Dashboard
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/posts"
+            >
+                <span>02</span>
+                All Posts
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/posts/add"
+            >
+                <span>03</span>
+                Add Post
+            </a>
+
+            <a
+                class="admin-nav-link admin-nav-link-active"
+                href="/admin/templates"
+            >
+                <span>04</span>
+                Templates
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/"
+                target="_blank"
+                rel="noopener"
+            >
+                <span>05</span>
+                View Site
+            </a>
+
+        </nav>
+
+===== 6. ADMIN CSS =====
+862:   Posts v0.1
+
+===== 7. PHP SYNTAX =====
+--- app/Admin/AdminAuth.php ---
+No syntax errors detected in app/Admin/AdminAuth.php
+--- app/Api/ApiClient.php ---
+No syntax errors detected in app/Api/ApiClient.php
+--- app/Application.php ---
+No syntax errors detected in app/Application.php
+--- app/Controllers/AdminController.php ---
+No syntax errors detected in app/Controllers/AdminController.php
+--- app/View.php ---
+No syntax errors detected in app/View.php
+--- views/admin/dashboard.php ---
+No syntax errors detected in views/admin/dashboard.php
+--- views/admin/templates.php ---
+No syntax errors detected in views/admin/templates.php
+--- views/admin/posts.php ---
+No syntax errors detected in views/admin/posts.php
+--- views/admin/add-post.php ---
+No syntax errors detected in views/admin/add-post.php
+--- views/layouts/admin.php ---
+No syntax errors detected in views/layouts/admin.php
+
+===== 8. ENGINE POSTS API =====
+HTTP 200
+{"data":[{"id":3,"user_id":1,"title":"The Frontend Meets the Engine","slug":"the-frontend-meets-the-engine","content":"<p>This is our end-to-end integration test.<\/p><p>The frontend requests this article through the Jaroa API and renders the response.<\/p>","created_at":"2026-09-04 08:59:14","updated_at":"2026-09-04 08:59:14","author":{"id":1,"name":"Jaroa Test Writer","email":"writer@jaroa.test","role":"editor"}},{"id":2,"user_id":1,"title":"Building a Native PHP Application","slug":"building-a-native-php-application","content":"<p>Jaroa uses a lightweight native PHP application layer, a dedicated API, and MariaDB.<\/p><p>This article exists purely to test the content pipeline.<\/p>","created_at":"2026-09-04 08:59:14","updated_at":"2026-09-04 08:59:14","author":{"id":1,"name":"Jaroa Test Writer","email":"writer@jaroa.test","role":"editor"}},{"id":1,"user_id":1,"title":"Welcome to Jaroa","slug":"welcome-to-jaroa","content":"<p>This is the first test article served by the native Jaroa Engine.<\/p><p>The frontend is now reading this content from the native Jaroa Engine.<\/p>","created_at":"2026-09-04 08:59:14","updated_at":"2026-09-04 09:20:51","author":{"id":1,"name":"Jaroa Test Writer","email":"writer@jaroa.test","role":"editor"}}],"meta":{"page":1,"limit":5,"total":3,"total_pages":1}}
+===== 9. ADMIN LOGIN =====
+HTTP 200
+11:    <title>Jaroa · Admin Login</title>
+15:        href="/assets/css/jaroa-admin.css"
+32:                <strong>Jaroa</strong>
+33:                <span>Admin Console</span>
+48:                Sign in to manage your Jaroa application,
+89:                Enter Jaroa
+
+===== 10. CURRENT GIT STATUS =====
+ M frontend/app/Api/ApiClient.php
+ M frontend/app/Application.php
+ M frontend/app/Controllers/AdminController.php
+ M frontend/public/assets/css/jaroa-admin.css
+ M frontend/views/admin/dashboard.php
+ M frontend/views/admin/templates.php
+?? frontend/app/View.php.before-admin-layout
+?? frontend/jaroa-admin-layout-verify-2.txt
+?? frontend/jaroa-admin-layout-verify.txt
+?? frontend/jaroa-admin-render-debug.txt
+?? frontend/jaroa-admin-view-debug.txt
+?? frontend/views/admin/add-post.php
+?? frontend/views/admin/posts.php
+?? jaroa-admin-posts-final-verify.txt
+?? jaroa-admin-posts-nav-debug.txt
+?? jaroa-admin-rat-hunt.txt
+?? scripts/admin-posts-v0.1.sh
+
+============================================================
+ VERIFICATION COMPLETE
+============================================================

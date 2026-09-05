@@ -32,9 +32,25 @@ $templates = $templates ?? [];
 
             <a
                 class="admin-nav-link"
-                href="/admin/templates"
+                href="/admin/posts"
             >
                 <span>02</span>
+                All Posts
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/posts/add"
+            >
+                <span>03</span>
+                Add Post
+            </a>
+
+            <a
+                class="admin-nav-link"
+                href="/admin/templates"
+            >
+                <span>04</span>
                 Templates
             </a>
 
@@ -44,7 +60,7 @@ $templates = $templates ?? [];
                 target="_blank"
                 rel="noopener"
             >
-                <span>03</span>
+                <span>05</span>
                 View Site
             </a>
 
@@ -231,7 +247,7 @@ $templates = $templates ?? [];
 
                 </div>
 
-                <div class="admin-list">
+                <div class="admin-list admin-recent-posts">
 
                     <?php if ($recentPosts === []): ?>
 
@@ -245,52 +261,106 @@ $templates = $templates ?? [];
                             $recentPosts as $index => $post
                         ): ?>
 
-                            <a
-                                class="admin-list-row"
-                                href="/articles/<?= htmlspecialchars(
-                                    (string) $post['slug']
-                                ) ?>"
-                                target="_blank"
-                                rel="noopener"
+                            <?php
+                            $postId = (int) (
+                                $post['id'] ?? 0
+                            );
+
+                            $slug = (string) (
+                                $post['slug'] ?? ''
+                            );
+
+                            $title = (string) (
+                                $post['title'] ?? 'Untitled'
+                            );
+
+                            $date = (string) (
+                                $post['date']
+                                ?? $post['created_at']
+                                ?? ''
+                            );
+                            ?>
+
+                            <article
+                                class="admin-recent-post"
                             >
 
-                                <span class="admin-list-number">
-                                    <?= str_pad(
-                                        (string) ($index + 1),
-                                        2,
-                                        '0',
-                                        STR_PAD_LEFT
-                                    ) ?>
-                                </span>
+                                <a
+                                    class="admin-list-row"
+                                    href="/articles/<?= htmlspecialchars(
+                                        $slug
+                                    ) ?>"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
 
-                                <div class="admin-list-copy">
-
-                                    <strong>
-                                        <?= htmlspecialchars(
+                                    <span
+                                        class="admin-list-number"
+                                    >
+                                        <?= str_pad(
                                             (string) (
-                                                $post['title']
-                                                ?? ''
-                                            )
-                                        ) ?>
-                                    </strong>
-
-                                    <span>
-                                        <?= htmlspecialchars(
-                                            (string) (
-                                                $post['date']
-                                                ?? $post['created_at']
-                                                ?? ''
-                                            )
+                                                $index + 1
+                                            ),
+                                            2,
+                                            '0',
+                                            STR_PAD_LEFT
                                         ) ?>
                                     </span>
 
+                                    <div
+                                        class="admin-list-copy"
+                                    >
+
+                                        <strong>
+                                            <?= htmlspecialchars(
+                                                $title
+                                            ) ?>
+                                        </strong>
+
+                                        <span>
+                                            <?= htmlspecialchars(
+                                                $date
+                                            ) ?>
+                                        </span>
+
+                                    </div>
+
+                                    <span
+                                        class="admin-list-arrow"
+                                        title="View post"
+                                    >
+                                        ↗
+                                    </span>
+
+                                </a>
+
+                                <div
+                                    class="admin-post-actions"
+                                >
+
+                                    <a
+                                        class="admin-action-button"
+                                        href="/admin/posts/<?= $postId ?>/edit"
+                                    >
+                                        Edit
+                                    </a>
+
+                                    <form
+                                        method="post"
+                                        action="/admin/posts/<?= $postId ?>/delete"
+                                        onsubmit="return confirm('Delete this post permanently?');"
+                                    >
+                                        <button
+                                            class="admin-action-button admin-action-button-delete"
+                                            type="submit"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
+
                                 </div>
 
-                                <span class="admin-list-arrow">
-                                    ↗
-                                </span>
-
-                            </a>
+                            </article>
 
                         <?php endforeach; ?>
 

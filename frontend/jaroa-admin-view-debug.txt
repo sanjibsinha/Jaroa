@@ -1,0 +1,673 @@
+===== VIEW.PHP =====
+     1	<?php
+     2	
+     3	namespace App;
+     4	
+     5	use App\Templates\TemplateManager;
+     6	use RuntimeException;
+     7	
+     8	class View
+     9	{
+    10	    private static array $shared = [];
+    11	
+    12	    private static ?TemplateManager $templateManager = null;
+    13	
+    14	    /**
+    15	     * Share data with all views.
+    16	     */
+    17	    public static function share(array $data): void
+    18	    {
+    19	        self::$shared = array_merge(
+    20	            self::$shared,
+    21	            $data
+    22	        );
+    23	    }
+    24	
+    25	    /**
+    26	     * Set the template manager.
+    27	     */
+    28	    public static function setTemplateManager(
+    29	        TemplateManager $templateManager
+    30	    ): void {
+    31	        self::$templateManager = $templateManager;
+    32	    }
+    33	
+    34	    /**
+    35	     * Render a normal application view.
+    36	     */
+    37	    public static function render(
+    38	        string $view,
+    39	        array $data = []
+    40	    ): void {
+    41	        self::renderFile(
+    42	            self::viewPath($view),
+    43	            $data
+    44	        );
+    45	    }
+    46	
+    47	    /**
+    48	     * Render the currently active template.
+    49	     */
+    50	    public static function renderTemplate(
+    51	        array $data = []
+    52	    ): void {
+    53	        if (null === self::$templateManager) {
+    54	            throw new RuntimeException(
+    55	                'Template manager has not been configured.'
+    56	            );
+    57	        }
+    58	
+    59	        $template = self::$templateManager->active();
+    60	
+    61	        if (null === $template) {
+    62	            throw new RuntimeException(
+    63	                'No active template.'
+    64	            );
+    65	        }
+    66	
+    67	        self::renderFile(
+    68	            self::templatePath($template),
+    69	            $data
+    70	        );
+    71	    }
+    72	
+    73	    /**
+    74	     * Render an installed template by its slug.
+    75	     */
+    76	    public static function renderTemplateBySlug(
+    77	        string $slug,
+    78	        array $data = []
+    79	    ): void {
+    80	        if (null === self::$templateManager) {
+    81	            throw new RuntimeException(
+    82	                'Template manager has not been configured.'
+    83	            );
+    84	        }
+    85	
+    86	        if (!self::$templateManager->isInstalled($slug)) {
+    87	            throw new RuntimeException(
+    88	                "Template is not installed: {$slug}"
+    89	            );
+    90	        }
+    91	
+    92	        self::renderFile(
+    93	            self::templatePath($slug),
+    94	            $data
+    95	        );
+    96	    }
+    97	
+    98	    /**
+    99	     * Render a view file through the application layout.
+   100	     */
+   101	    private static function renderFile(
+   102	        string $viewPath,
+   103	        array $data
+   104	    ): void {
+   105	        extract(
+   106	            array_merge(
+   107	                self::$shared,
+   108	                $data
+   109	            ),
+   110	            EXTR_SKIP
+   111	        );
+   112	
+   113	        ob_start();
+   114	
+   115	        require $viewPath;
+   116	
+   117	        $content = ob_get_clean();
+   118	
+   119	        $layoutPath =
+   120	            __DIR__ . '/../views/layouts/app.php';
+   121	
+   122	        if (!is_file($layoutPath)) {
+   123	            throw new RuntimeException(
+   124	                'Application layout not found.'
+   125	            );
+   126	        }
+   127	
+   128	        require $layoutPath;
+   129	    }
+   130	
+   131	    /**
+   132	     * Resolve a normal application view path.
+   133	     */
+   134	    private static function viewPath(
+   135	        string $view
+   136	    ): string {
+   137	        $viewPath =
+   138	            __DIR__ .
+   139	            '/../views/' .
+   140	            $view .
+   141	            '.php';
+   142	
+   143	        if (!is_file($viewPath)) {
+   144	            throw new RuntimeException(
+   145	                "View not found: {$view}"
+   146	            );
+   147	        }
+   148	
+   149	        return $viewPath;
+   150	    }
+   151	
+   152	    /**
+   153	     * Resolve an installed theme template path.
+   154	     */
+   155	    private static function templatePath(
+   156	        string $slug
+   157	    ): string {
+   158	        if (null === self::$templateManager) {
+   159	            throw new RuntimeException(
+   160	                'Template manager has not been configured.'
+   161	            );
+   162	        }
+   163	
+   164	        $themePath =
+   165	            __DIR__ .
+   166	            '/../site/themes/' .
+   167	            $slug .
+   168	            '/template.php';
+   169	
+   170	        if (!is_file($themePath)) {
+   171	            throw new RuntimeException(
+   172	                "Installed template not found: {$slug}"
+   173	            );
+   174	        }
+   175	
+   176	        return $themePath;
+   177	    }
+   178	}
+
+===== ADMIN LOGIN VIEW =====
+     1	<?php
+     2	
+     3	$pageTitle = 'Jaroa · Admin Login';
+     4	
+     5	$error = $error ?? null;
+     6	$email = $email ?? '';
+     7	?>
+     8	
+     9	<section class="admin-login-page">
+    10	
+    11	    <div class="admin-login-panel">
+    12	
+    13	        <div class="admin-login-brand">
+    14	            <span class="admin-logo">J</span>
+    15	
+    16	            <div>
+    17	                <strong>Jaroa</strong>
+    18	                <span>Admin Console</span>
+    19	            </div>
+    20	        </div>
+    21	
+    22	        <div class="admin-login-intro">
+    23	
+    24	            <p class="admin-kicker">
+    25	                ADMINISTRATION
+    26	            </p>
+    27	
+    28	            <h1>
+    29	                Welcome back.
+    30	            </h1>
+    31	
+    32	            <p>
+    33	                Sign in to manage your Jaroa application,
+    34	                content and starter templates.
+    35	            </p>
+    36	
+    37	        </div>
+    38	
+    39	        <?php if ($error !== null): ?>
+    40	
+    41	            <div class="admin-alert admin-alert-error">
+    42	                <?= htmlspecialchars($error) ?>
+    43	            </div>
+    44	
+    45	        <?php endif; ?>
+    46	
+    47	        <form
+    48	            class="admin-form"
+    49	            method="post"
+    50	            action="/admin/login"
+    51	        >
+    52	
+    53	            <label>
+    54	                <span>Email</span>
+    55	
+    56	                <input
+    57	                    type="email"
+    58	                    name="email"
+    59	                    value="<?= htmlspecialchars($email) ?>"
+    60	                    autocomplete="email"
+    61	                    required
+    62	                    autofocus
+    63	                >
+    64	            </label>
+    65	
+    66	            <label>
+    67	                <span>Password</span>
+    68	
+    69	                <input
+    70	                    type="password"
+    71	                    name="password"
+    72	                    autocomplete="current-password"
+    73	                    required
+    74	                >
+    75	            </label>
+    76	
+    77	            <button
+    78	                class="admin-button admin-button-primary"
+    79	                type="submit"
+    80	            >
+    81	                Enter Jaroa
+    82	                <span>↗</span>
+    83	            </button>
+    84	
+    85	        </form>
+    86	
+    87	        <a
+    88	            class="admin-back-link"
+    89	            href="/"
+    90	        >
+    91	            ← Return to application
+    92	        </a>
+    93	
+    94	    </div>
+    95	
+    96	    <div class="admin-login-art">
+    97	        <div class="admin-orbit admin-orbit-a"></div>
+    98	        <div class="admin-orbit admin-orbit-b"></div>
+    99	        <div class="admin-orbit admin-orbit-c"></div>
+   100	
+   101	        <div class="admin-orbit-core">
+   102	            J
+   103	        </div>
+   104	
+   105	        <span class="admin-coordinate">
+   106	            JAROA / 01
+   107	        </span>
+   108	    </div>
+   109	
+   110	</section>
+
+===== ADMIN DASHBOARD VIEW =====
+     1	<?php
+     2	
+     3	$pageTitle = 'Jaroa · Dashboard';
+     4	
+     5	$user = $user ?? [];
+     6	$recentPosts = $recentPosts ?? [];
+     7	$templates = $templates ?? [];
+     8	?>
+     9	
+    10	<div class="admin-app">
+    11	
+    12	    <aside class="admin-sidebar">
+    13	
+    14	        <div class="admin-sidebar-brand">
+    15	            <span class="admin-logo">J</span>
+    16	
+    17	            <div>
+    18	                <strong>Jaroa</strong>
+    19	                <span>Admin Console</span>
+    20	            </div>
+    21	        </div>
+    22	
+    23	        <nav class="admin-nav">
+    24	
+    25	            <a
+    26	                class="admin-nav-link admin-nav-link-active"
+    27	                href="/admin"
+    28	            >
+    29	                <span>01</span>
+    30	                Dashboard
+    31	            </a>
+    32	
+    33	            <a
+    34	                class="admin-nav-link"
+    35	                href="/admin/templates"
+    36	            >
+    37	                <span>02</span>
+    38	                Templates
+    39	            </a>
+    40	
+    41	            <a
+    42	                class="admin-nav-link"
+    43	                href="/"
+    44	                target="_blank"
+    45	                rel="noopener"
+    46	            >
+    47	                <span>03</span>
+    48	                View Site
+    49	            </a>
+    50	
+    51	        </nav>
+    52	
+    53	        <div class="admin-sidebar-footer">
+    54	
+    55	            <div class="admin-user-mini">
+    56	
+    57	                <span class="admin-user-dot"></span>
+    58	
+    59	                <div>
+    60	                    <strong>
+    61	                        <?= htmlspecialchars(
+    62	                            (string) (
+    63	                                $user['name']
+    64	                                ?? $user['email']
+    65	                                ?? 'User'
+    66	                            )
+    67	                        ) ?>
+    68	                    </strong>
+    69	
+    70	                    <span>
+    71	                        <?= htmlspecialchars(
+    72	                            ucfirst(
+    73	                                (string) (
+    74	                                    $user['role']
+    75	                                    ?? 'editor'
+    76	                                )
+    77	                            )
+    78	                        ) ?>
+    79	                    </span>
+    80	                </div>
+    81	
+    82	            </div>
+    83	
+    84	            <form
+    85	                method="post"
+    86	                action="/admin/logout"
+    87	            >
+    88	                <button
+    89	                    class="admin-logout"
+    90	                    type="submit"
+    91	                >
+    92	                    Sign out
+    93	                </button>
+    94	            </form>
+    95	
+    96	        </div>
+    97	
+    98	    </aside>
+    99	
+   100	    <main class="admin-main">
+   101	
+   102	        <header class="admin-topbar">
+   103	
+   104	            <div>
+   105	                <p class="admin-kicker">
+   106	                    JAROA / CONTROL ROOM
+   107	                </p>
+   108	
+   109	                <h1>
+   110	                    Dashboard
+   111	                </h1>
+   112	            </div>
+   113	
+   114	            <div class="admin-topbar-status">
+   115	
+   116	                <span
+   117	                    class="<?= $engineOnline
+   118	                        ? 'admin-status admin-status-online'
+   119	                        : 'admin-status admin-status-offline' ?>"
+   120	                >
+   121	                    <span></span>
+   122	
+   123	                    Engine
+   124	                    <?= $engineOnline
+   125	                        ? 'Online'
+   126	                        : 'Offline' ?>
+   127	                </span>
+   128	
+   129	            </div>
+   130	
+   131	        </header>
+   132	
+   133	        <section class="admin-welcome">
+   134	
+   135	            <div>
+   136	                <p class="admin-overline">
+   137	                    CURRENT WORKSPACE
+   138	                </p>
+   139	
+   140	                <h2>
+   141	                    Your application,
+   142	                    <em>under control.</em>
+   143	                </h2>
+   144	
+   145	                <p>
+   146	                    Manage content, presentation and the
+   147	                    visual identity of your Jaroa application
+   148	                    from one place.
+   149	                </p>
+   150	            </div>
+   151	
+   152	            <div class="admin-workspace-mark">
+   153	                J
+   154	            </div>
+   155	
+   156	        </section>
+   157	
+   158	        <section class="admin-stat-grid">
+   159	
+   160	            <article class="admin-stat-card">
+   161	                <span class="admin-stat-label">
+   162	                    POSTS
+   163	                </span>
+   164	
+   165	                <strong>
+   166	                    <?= $postCount ?>
+   167	                </strong>
+   168	
+   169	                <span class="admin-stat-note">
+   170	                    Stored in Jaroa Engine
+   171	                </span>
+   172	            </article>
+   173	
+   174	            <article class="admin-stat-card">
+   175	                <span class="admin-stat-label">
+   176	                    TEMPLATES
+   177	                </span>
+   178	
+   179	                <strong>
+   180	                    <?= count($templates) ?>
+   181	                </strong>
+   182	
+   183	                <span class="admin-stat-note">
+   184	                    Starter themes available
+   185	                </span>
+   186	            </article>
+   187	
+   188	            <article class="admin-stat-card">
+   189	                <span class="admin-stat-label">
+   190	                    ACTIVE
+   191	                </span>
+   192	
+   193	                <strong class="admin-stat-word">
+   194	                    <?= htmlspecialchars(
+   195	                        ucfirst(
+   196	                            (string) (
+   197	                                $activeTemplate
+   198	                                ?? 'None'
+   199	                            )
+   200	                        )
+   201	                    ) ?>
+   202	                </strong>
+   203	
+   204	                <span class="admin-stat-note">
+   205	                    Current presentation layer
+   206	                </span>
+   207	            </article>
+   208	
+   209	        </section>
+   210	
+   211	        <section class="admin-content-grid">
+   212	
+   213	            <div class="admin-panel">
+   214	
+   215	                <div class="admin-panel-heading">
+   216	
+   217	                    <div>
+   218	                        <p class="admin-overline">
+   219	                            CONTENT
+   220	                        </p>
+   221	
+   222	                        <h2>
+   223	                            Recent posts
+   224	                        </h2>
+   225	                    </div>
+   226	
+   227	                    <span>
+   228	                        <?= $postCount ?>
+   229	                        total
+   230	                    </span>
+   231	
+   232	                </div>
+   233	
+   234	                <div class="admin-list">
+   235	
+   236	                    <?php if ($recentPosts === []): ?>
+   237	
+   238	                        <div class="admin-empty">
+   239	                            No posts yet.
+   240	                        </div>
+   241	
+   242	                    <?php else: ?>
+   243	
+   244	                        <?php foreach (
+   245	                            $recentPosts as $index => $post
+   246	                        ): ?>
+   247	
+   248	                            <a
+   249	                                class="admin-list-row"
+   250	                                href="/articles/<?= htmlspecialchars(
+   251	                                    (string) $post['slug']
+   252	                                ) ?>"
+   253	                                target="_blank"
+   254	                                rel="noopener"
+   255	                            >
+   256	
+   257	                                <span class="admin-list-number">
+   258	                                    <?= str_pad(
+   259	                                        (string) ($index + 1),
+   260	                                        2,
+   261	                                        '0',
+   262	                                        STR_PAD_LEFT
+   263	                                    ) ?>
+   264	                                </span>
+   265	
+   266	                                <div class="admin-list-copy">
+   267	
+   268	                                    <strong>
+   269	                                        <?= htmlspecialchars(
+   270	                                            (string) (
+   271	                                                $post['title']
+   272	                                                ?? ''
+   273	                                            )
+   274	                                        ) ?>
+   275	                                    </strong>
+   276	
+   277	                                    <span>
+   278	                                        <?= htmlspecialchars(
+   279	                                            (string) (
+   280	                                                $post['date']
+   281	                                                ?? $post['created_at']
+   282	                                                ?? ''
+   283	                                            )
+   284	                                        ) ?>
+   285	                                    </span>
+   286	
+   287	                                </div>
+   288	
+   289	                                <span class="admin-list-arrow">
+   290	                                    ↗
+   291	                                </span>
+   292	
+   293	                            </a>
+   294	
+   295	                        <?php endforeach; ?>
+   296	
+   297	                    <?php endif; ?>
+   298	
+   299	                </div>
+   300	
+   301	            </div>
+   302	
+   303	            <div class="admin-panel admin-panel-accent">
+   304	
+   305	                <p class="admin-overline">
+   306	                    PRESENTATION
+   307	                </p>
+   308	
+   309	                <h2>
+   310	                    <?= htmlspecialchars(
+   311	                        ucfirst(
+   312	                            (string) (
+   313	                                $activeTemplate
+   314	                                ?? 'No active theme'
+   315	                            )
+   316	                        )
+   317	                    ) ?>
+   318	                </h2>
+   319	
+   320	                <p>
+   321	                    The public frontend is powered by
+   322	                    the current starter theme. Change it,
+   323	                    then inspect the result immediately.
+   324	                </p>
+   325	
+   326	                <a
+   327	                    class="admin-button"
+   328	                    href="/admin/templates"
+   329	                >
+   330	                    Manage Templates
+   331	                    <span>↗</span>
+   332	                </a>
+   333	
+   334	            </div>
+   335	
+   336	        </section>
+   337	
+   338	        <section class="admin-foundation">
+   339	
+   340	            <div class="admin-foundation-heading">
+   341	
+   342	                <p class="admin-overline">
+   343	                    v0.1 FOUNDATION
+   344	                </p>
+   345	
+   346	                <h2>
+   347	                    One control room.
+   348	                    Many surfaces.
+   349	                </h2>
+   350	
+   351	            </div>
+   352	
+   353	            <div class="admin-foundation-grid">
+   354	
+   355	                <article>
+   356	                    <span>01</span>
+   357	                    <strong>Content</strong>
+   358	                    <p>
+   359	                        Posts and editorial data live in
+   360	                        the native Jaroa Engine.
+   361	                    </p>
+   362	                </article>
+   363	
+   364	                <article>
+   365	                    <span>02</span>
+   366	                    <strong>Presentation</strong>
+   367	                    <p>
+   368	                        Starter themes remain independent
+   369	                        from the application core.
+   370	                    </p>
+   371	                </article>
+   372	
+   373	                <article>
+   374	                    <span>03</span>
+   375	                    <strong>Administration</strong>
+   376	                    <p>
+   377	                        Authentication and control surfaces
+   378	                        belong to the application layer.
+   379	                    </p>
+   380	                </article>

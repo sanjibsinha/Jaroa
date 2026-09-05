@@ -1,0 +1,133 @@
+============================================================
+ JAROA / DDEV CROSS-PROJECT NETWORK DIAGNOSTIC
+============================================================
+
+===== DDEV ACTIVE PROJECTS =====
+┌────────────────────┬────────┬─────────────────────────────────────────────── ≈
+│ NAME               │ STATUS │ LOCATION                                       ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ backend            │ [32mOK[0m     │ ~/Jaroa/backend                                ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ frontend           │ [32mOK[0m     │ ~/Jaroa/frontend                               ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ fullstack-app      │ [33mpaused[0m │ ~/Development/fullstack-app                    ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ fullstack-frontend │ [33mpaused[0m │ ~/Development/fullstack-frontend               ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ jaroa-engine       │ [33mpaused[0m │ ~/Jaroa/engine                                 ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ project-vikram     │ [33mpaused[0m │ ~/Development/project-vikram/backend/wordpress ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ wp-demo-one        │ [33mpaused[0m │ ~/WordPress/wp-demo-one                        ≈
+├────────────────────┼────────┼─────────────────────────────────────────────── ≈
+│ Router             │ [32mOK[0m     │ ~/.ddev                                        ≈
+└────────────────────┴────────┴─────────────────────────────────────────────── ≈
+
+
+===== ENGINE DESCRIPTION =====
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Project: jaroa-engine ~/Jaroa/engine https://jaroa-engine.ddev.site                        │
+│ Docker platform: linux-docker                                                              │
+│ Router: traefik                                                                            │
+│ DDEV version: v1.25.2                                                                      │
+├──────────────┬─────────┬──────────────────────────────────────────────┬────────────────────┤
+│ SERVICE      │ STAT    │ URL/PORT                                     │ INFO               │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ web          │ [31mexited[0m  │ https://jaroa-engine.ddev.site               │ php PHP 8.4        │
+│              │         │ InDocker -> Host:                            │ Server: nginx-fpm  │
+│              │         │  - web:80 -> 127.0.0.1:32768                 │ Docroot: 'public'  │
+│              │         │  - web:443 -> 127.0.0.1:32769                │ Perf mode: none    │
+│              │         │  - web:8025 -> 127.0.0.1:32770               │ Node.js: 24        │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ db           │ [31mexited[0m  │ InDocker -> Host:                            │ mariadb:11.8       │
+│              │         │  - db:3306 -> 127.0.0.1:32772                │ User/Pass: 'db/db' │
+│              │         │                                              │ or 'root/root'     │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ xhgui        │ [31mstopped[0m │ https://jaroa-engine.ddev.site:8142          │                    │
+│              │         │ InDocker:                                    │                    │
+│              │         │  - xhgui:80                                  │                    │
+│              │         │ Launch: ddev xhgui                           │                    │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ Mailpit      │         │ Mailpit: https://jaroa-engine.ddev.site:8026 │                    │
+│              │         │ Launch: ddev mailpit                         │                    │
+├──────────────┼─────────┼──────────────────────────────────────────────┼────────────────────┤
+│ Project URLs │         │ https://jaroa-engine.ddev.site,              │                    │
+│              │         │ https://127.0.0.1:32769,                     │                    │
+│              │         │ http://jaroa-engine.ddev.site,               │                    │
+│              │         │ http://127.0.0.1:32768                       │                    │
+└──────────────┴─────────┴──────────────────────────────────────────────┴────────────────────┘
+
+
+===== FRONTEND DESCRIPTION =====
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ Project: frontend ~/Jaroa/frontend https://frontend.ddev.site                          │
+│ Docker platform: linux-docker                                                          │
+│ Router: traefik                                                                        │
+│ DDEV version: v1.25.2                                                                  │
+├──────────────┬─────────┬──────────────────────────────────────────┬────────────────────┤
+│ SERVICE      │ STAT    │ URL/PORT                                 │ INFO               │
+├──────────────┼─────────┼──────────────────────────────────────────┼────────────────────┤
+│ web          │ [32mOK[0m      │ https://frontend.ddev.site               │ php PHP 8.4        │
+│              │         │ InDocker -> Host:                        │ Server: nginx-fpm  │
+│              │         │  - web:80 -> 127.0.0.1:32776             │ Docroot: 'public'  │
+│              │         │  - web:443 -> 127.0.0.1:32777            │ Perf mode: none    │
+│              │         │  - web:8025 -> 127.0.0.1:32778           │ Node.js: 24        │
+├──────────────┼─────────┼──────────────────────────────────────────┼────────────────────┤
+│ db           │ [32mOK[0m      │ InDocker -> Host:                        │ mariadb:11.8       │
+│              │         │  - db:3306 -> 127.0.0.1:32779            │ User/Pass: 'db/db' │
+│              │         │                                          │ or 'root/root'     │
+├──────────────┼─────────┼──────────────────────────────────────────┼────────────────────┤
+│ xhgui        │ [31mstopped[0m │ https://frontend.ddev.site:8142          │                    │
+│              │         │ InDocker:                                │                    │
+│              │         │  - xhgui:80                              │                    │
+│              │         │ Launch: ddev xhgui                       │                    │
+├──────────────┼─────────┼──────────────────────────────────────────┼────────────────────┤
+│ Mailpit      │         │ Mailpit: https://frontend.ddev.site:8026 │                    │
+│              │         │ Launch: ddev mailpit                     │                    │
+├──────────────┼─────────┼──────────────────────────────────────────┼────────────────────┤
+│ Project URLs │         │ https://frontend.ddev.site,              │                    │
+│              │         │ https://127.0.0.1:32777,                 │                    │
+│              │         │ http://frontend.ddev.site,               │                    │
+│              │         │ http://127.0.0.1:32776                   │                    │
+└──────────────┴─────────┴──────────────────────────────────────────┴────────────────────┘
+
+
+===== FRONTEND DNS =====
+
+===== FRONTEND RESOLVER =====
+# Generated by Docker Engine.
+# This file can be edited; Docker Engine will not make further changes once it
+# has been modified.
+
+nameserver 127.0.0.11
+search .
+options edns0 trust-ad ndots:0
+
+# Based on host file: '/etc/resolv.conf' (internal resolver)
+# ExtServers: [host(127.0.0.53)]
+# Overrides: []
+# Option ndots from: internal
+
+===== DOCKER NETWORKS =====
+NETWORK ID     NAME                              DRIVER    SCOPE
+10046e564df0   bridge                            bridge    local
+ac625d12d9f1   ddev-backend_default              bridge    local
+457049bdf870   ddev-frontend_default             bridge    local
+e94cb54efaa4   ddev-fullstack-app_default        bridge    local
+00b1bfcb75af   ddev-fullstack-frontend_default   bridge    local
+bb9f4a22a923   ddev-jaroa-engine_default         bridge    local
+e60694a7e46a   ddev-project-vikram_default       bridge    local
+864eddc9867d   ddev-wp-demo-one_default          bridge    local
+7c8ef1401542   ddev_default                      bridge    local
+17122932825b   host                              host      local
+41a066fd93cb   none                              null      local
+
+===== FRONTEND CONTAINER NETWORKS =====
+{"ddev-frontend_default":{"IPAMConfig":null,"Links":null,"Aliases":["ddev-frontend-web","web"],"DriverOpts":null,"GwPriority":0,"NetworkID":"457049bdf870fff6cfece47ab4a10a952d3672d4a5293093faccda9906912de2","EndpointID":"95691e9e402f2c930e3ca6ef41704bb95ba0521769049eaa28a2c06b02590110","Gateway":"172.24.0.1","IPAddress":"172.24.0.2","MacAddress":"da:1e:50:e2:e5:51","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"DNSNames":["ddev-frontend-web","web","62b6fb346adb","frontend-web"]},"ddev_default":{"IPAMConfig":null,"Links":null,"Aliases":["ddev-frontend-web","web"],"DriverOpts":null,"GwPriority":0,"NetworkID":"7c8ef14015423d6eb52b1e16380c22769065109128e99e4e064bc5db5c995d1e","EndpointID":"78933fb72c0d7c891651dc2da73a621475a5c59fe0ca522867373c4bc2b0ac8d","Gateway":"172.18.0.1","IPAddress":"172.18.0.6","MacAddress":"9e:e0:c7:07:52:c2","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"DNSNames":["ddev-frontend-web","web","62b6fb346adb","frontend-web"]}}
+
+===== ENGINE CONTAINER NETWORKS =====
+Engine container not found.
+
+============================================================
+ DIAGNOSTIC COMPLETE
+============================================================

@@ -81,6 +81,39 @@ class Application
             [$adminController, 'dashboard']
         );
 
+
+        $this->router->get(
+            '/admin/posts',
+            [$adminController, 'allPosts']
+        );
+
+        $this->router->get(
+            '/admin/posts/add',
+            [$adminController, 'addPostForm']
+        );
+
+        $this->router->post(
+            '/admin/posts/add',
+            [$adminController, 'createPost']
+        );
+
+
+
+        $this->router->get(
+            '/admin/posts/{id}/edit',
+            [$adminController, 'editPostForm']
+        );
+
+        $this->router->post(
+            '/admin/posts/{id}/edit',
+            [$adminController, 'updatePost']
+        );
+
+        $this->router->post(
+            '/admin/posts/{id}/delete',
+            [$adminController, 'deletePost']
+        );
+
         $this->router->get(
             '/admin/templates',
             [$adminController, 'templates']

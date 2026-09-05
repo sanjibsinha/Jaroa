@@ -1,0 +1,547 @@
+===== RENDER PIPELINE =====
+app/Templates/TemplateManager.php:7:class TemplateManager
+app/Application.php:16:use App\Templates\TemplateManager;
+app/Application.php:40:        $templateManager = new TemplateManager(
+app/Application.php:51:        View::setTemplateManager(
+app/Application.php:52:            $templateManager
+app/Application.php:64:            $templateManager,
+app/Application.php:108:            $templateManager,
+app/Application.php:134:            $templateManager
+app/Application.php:166:                $templateManager
+app/Application.php:170:            $templateManager->available()
+app/Application.php.bak:15:use App\Templates\TemplateManager;
+app/Application.php.bak:45:        $templateManager = new TemplateManager(
+app/Application.php.bak:56:        View::setTemplateManager(
+app/Application.php.bak:57:            $templateManager
+app/Application.php.bak:66:            $templateManager,
+app/Application.php.bak:93:            $templateManager
+app/Application.php.bak:125:                $templateManager
+app/Application.php.bak:129:            $templateManager->available()
+app/Controllers/TemplateController.php:6:use App\Templates\TemplateManager;
+app/Controllers/TemplateController.php:11:    private TemplateManager $templateManager;
+app/Controllers/TemplateController.php:16:        TemplateManager $templateManager,
+app/Controllers/TemplateController.php:19:        $this->templateManager = $templateManager;
+app/Controllers/TemplateController.php:31:                'templates' => $this->templateManager->available(),
+app/Controllers/TemplateController.php:32:                'installedTemplates' => $this->templateManager->installed(),
+app/Controllers/TemplateController.php:33:                'activeTemplate' => $this->templateManager->active(),
+app/Controllers/TemplateController.php:77:        $this->templateManager->activate($slug);
+app/Controllers/HomeController.php:6:use App\Templates\TemplateManager;
+app/Controllers/HomeController.php:13:    private TemplateManager $templateManager;
+app/Controllers/HomeController.php:17:        TemplateManager $templateManager
+app/Controllers/HomeController.php:20:        $this->templateManager = $templateManager;
+app/Controllers/HomeController.php:33:            $this->templateManager->active();
+app/Controllers/HomeController.php:37:                ? $this->templateManager->showcase(
+app/Controllers/HomeController.php.bak:7:use App\Templates\TemplateManager;
+app/Controllers/HomeController.php.bak:16:    private TemplateManager $templateManager;
+app/Controllers/HomeController.php.bak:21:        TemplateManager $templateManager
+app/Controllers/HomeController.php.bak:25:        $this->templateManager = $templateManager;
+app/Controllers/HomeController.php.bak:38:            $this->templateManager->active();
+app/Controllers/HomeController.php.bak:42:                ? $this->templateManager->showcase(
+app/Controllers/TemplateShowcaseController.php:6:use App\Templates\TemplateManager;
+app/Controllers/TemplateShowcaseController.php:11:    private TemplateManager $templateManager;
+app/Controllers/TemplateShowcaseController.php:14:        TemplateManager $templateManager
+app/Controllers/TemplateShowcaseController.php:16:        $this->templateManager = $templateManager;
+app/Controllers/TemplateShowcaseController.php:32:        $template = $this->templateManager->find(
+app/Controllers/TemplateShowcaseController.php:38:            !$this->templateManager->isInstalled($slug)
+app/Controllers/AdminController.php:9:use App\Templates\TemplateManager;
+app/Controllers/AdminController.php:18:        private readonly TemplateManager $templates,
+app/View.php:5:use App\Templates\TemplateManager;
+app/View.php:12:    private static ?TemplateManager $templateManager = null;
+app/View.php:28:    public static function setTemplateManager(
+app/View.php:29:        TemplateManager $templateManager
+app/View.php:31:        self::$templateManager = $templateManager;
+app/View.php:37:    public static function render(
+app/View.php:50:    public static function renderTemplate(
+app/View.php:53:        if (null === self::$templateManager) {
+app/View.php:59:        $template = self::$templateManager->active();
+app/View.php:76:    public static function renderTemplateBySlug(
+app/View.php:80:        if (null === self::$templateManager) {
+app/View.php:86:        if (!self::$templateManager->isInstalled($slug)) {
+app/View.php:101:    private static function renderFile(
+app/View.php:128:        require $layoutPath;
+app/View.php:134:    private static function viewPath(
+app/View.php:158:        if (null === self::$templateManager) {
+
+===== ADMIN CONTROLLER =====
+     1	<?php
+     2	
+     3	namespace App\Controllers;
+     4	
+     5	use App\Admin\AdminAuth;
+     6	use App\Api\ApiClient;
+     7	use App\Services\PostService;
+     8	use App\Templates\TemplateInstaller;
+     9	use App\Templates\TemplateManager;
+    10	use App\View;
+    11	use RuntimeException;
+    12	
+    13	final class AdminController
+    14	{
+    15	    public function __construct(
+    16	        private readonly AdminAuth $auth,
+    17	        private readonly PostService $posts,
+    18	        private readonly TemplateManager $templates,
+    19	        private readonly TemplateInstaller $templateInstaller,
+    20	        private readonly ApiClient $api
+    21	    ) {
+    22	    }
+    23	
+    24	    public function loginForm(
+    25	        array $parameters = []
+    26	    ): void {
+    27	        if ($this->auth->isAuthenticated()) {
+    28	            $this->redirect('/admin');
+    29	        }
+    30	
+    31	        View::render(
+    32	            'admin/login',
+    33	            [
+    34	                'error' => null,
+    35	                'email' => '',
+    36	            ],
+    37	            'admin'
+    38	        );
+    39	    }
+    40	
+    41	    public function login(
+    42	        array $parameters = []
+    43	    ): void {
+    44	        $email = trim(
+    45	            (string) ($_POST['email'] ?? '')
+    46	        );
+    47	
+    48	        $password = (string) (
+    49	            $_POST['password'] ?? ''
+    50	        );
+    51	
+    52	        if (
+    53	            $email === '' ||
+    54	            $password === ''
+    55	        ) {
+    56	            View::render(
+    57	                'admin/login',
+    58	                [
+    59	                    'error' =>
+    60	                        'Email and password are required.',
+    61	                    'email' => $email,
+    62	                ],
+    63	                'admin'
+    64	            );
+    65	
+    66	            return;
+    67	        }
+    68	
+    69	        try {
+    70	            $user = $this->auth->login(
+    71	                $email,
+    72	                $password
+    73	            );
+    74	
+    75	            $role = $user['role'] ?? '';
+    76	
+    77	            if (
+    78	                !in_array(
+    79	                    $role,
+    80	                    ['admin', 'editor'],
+    81	                    true
+    82	                )
+    83	            ) {
+    84	                $this->auth->logout();
+    85	
+    86	                View::render(
+    87	                    'admin/login',
+    88	                    [
+    89	                        'error' =>
+    90	                            'This account does not have admin access.',
+    91	                        'email' => $email,
+    92	                    ],
+    93	                    'admin'
+    94	                );
+    95	
+    96	                return;
+    97	            }
+    98	        } catch (\Throwable) {
+    99	            View::render(
+   100	                'admin/login',
+   101	                [
+   102	                    'error' =>
+   103	                        'Unable to sign in. Check your credentials.',
+   104	                    'email' => $email,
+   105	                ],
+   106	                'admin'
+   107	            );
+   108	
+   109	            return;
+   110	        }
+   111	
+   112	        $this->redirect('/admin');
+   113	    }
+   114	
+   115	    public function dashboard(
+   116	        array $parameters = []
+   117	    ): void {
+   118	        try {
+   119	            $user = $this->auth->requireRole(
+   120	                ['admin', 'editor']
+   121	            );
+   122	        } catch (RuntimeException $exception) {
+   123	            http_response_code(403);
+   124	
+   125	            View::render(
+   126	                'admin/forbidden',
+   127	                [
+   128	                    'message' => $exception->getMessage(),
+   129	                ],
+   130	                'admin'
+   131	            );
+   132	
+   133	            return;
+   134	        }
+   135	
+   136	        $posts = $this->posts->paginate(
+   137	            1,
+   138	            5
+   139	        );
+   140	
+   141	        $status = null;
+   142	
+   143	        try {
+   144	            $statusResponse =
+   145	                $this->api->get('/status');
+   146	
+   147	            $status =
+   148	                $statusResponse['status']
+   149	                ?? null;
+   150	        } catch (\Throwable) {
+   151	            $status = null;
+   152	        }
+   153	
+   154	        View::render(
+   155	            'admin/dashboard',
+   156	            [
+   157	                'user' => $user,
+   158	                'postCount' =>
+   159	                    (int) (
+   160	                        $posts['meta']['total']
+   161	                        ?? 0
+   162	                    ),
+   163	                'recentPosts' =>
+   164	                    $posts['data']
+   165	                    ?? [],
+   166	                'engineOnline' =>
+   167	                    $status === 'ok',
+   168	                'activeTemplate' =>
+   169	                    $this->templates->active(),
+   170	                'templates' =>
+   171	                    $this->templates->available(),
+   172	            ],
+   173	            'admin'
+   174	        );
+   175	    }
+   176	
+   177	    public function templates(
+   178	        array $parameters = []
+   179	    ): void {
+   180	        $user = $this->auth->requireRole(
+   181	            ['admin', 'editor']
+   182	        );
+   183	
+   184	        View::render(
+   185	            'admin/templates',
+   186	            [
+   187	                'user' => $user,
+   188	                'templates' =>
+   189	                    $this->templates->available(),
+   190	                'installedTemplates' =>
+   191	                    $this->templates->installed(),
+   192	                'activeTemplate' =>
+   193	                    $this->templates->active(),
+   194	            ],
+   195	            'admin'
+   196	        );
+   197	    }
+   198	
+   199	    public function installTemplate(
+   200	        array $parameters
+   201	    ): void {
+   202	        $this->auth->requireRole(
+   203	            ['admin', 'editor']
+   204	        );
+   205	
+   206	        $slug = $parameters['slug'] ?? '';
+   207	
+   208	        if (!is_string($slug) || $slug === '') {
+   209	            throw new RuntimeException(
+   210	                'Template slug is required.'
+   211	            );
+   212	        }
+   213	
+   214	        $this->templateInstaller->install(
+   215	            $slug
+   216	        );
+   217	
+   218	        $this->redirect('/admin/templates');
+   219	    }
+   220	
+   221	    public function activateTemplate(
+   222	        array $parameters
+   223	    ): void {
+   224	        $this->auth->requireRole(
+   225	            ['admin', 'editor']
+   226	        );
+   227	
+   228	        $slug = $parameters['slug'] ?? '';
+   229	
+   230	        if (!is_string($slug) || $slug === '') {
+   231	            throw new RuntimeException(
+   232	                'Template slug is required.'
+   233	            );
+   234	        }
+   235	
+   236	        $this->templates->activate($slug);
+   237	
+   238	        $this->redirect('/admin/templates');
+   239	    }
+   240	
+   241	    public function logout(
+   242	        array $parameters = []
+   243	    ): void {
+   244	        $this->auth->logout();
+   245	
+   246	        $this->redirect('/admin/login');
+   247	    }
+   248	
+   249	    private function redirect(
+   250	        string $path
+   251	    ): never {
+   252	        header('Location: ' . $path);
+   253	        exit;
+   254	    }
+   255	}
+
+===== APPLICATION =====
+     1	<?php
+     2	
+     3	namespace App;
+     4	
+     5	use App\Admin\AdminAuth;
+     6	use App\Api\ApiClient;
+     7	use App\Controllers\AdminController;
+     8	use App\Controllers\ArticleController;
+     9	use App\Controllers\HomeController;
+    10	use App\Exceptions\NotFoundException;
+    11	use App\Routing\Router;
+    12	use App\Services\PostService;
+    13	use App\Controllers\TemplateController;
+    14	use App\Controllers\TemplateShowcaseController;
+    15	use App\Templates\TemplateInstaller;
+    16	use App\Templates\TemplateManager;
+    17	
+    18	class Application
+    19	{
+    20	    private ApiClient $api;
+    21	
+    22	    private PostService $postService;
+    23	
+    24	    private Router $router;
+    25	
+    26	    public function __construct(array $config)
+    27	    {
+    28	        $this->api = new ApiClient(
+    29	            $config['api']['base_url']
+    30	        );
+    31	
+    32	        View::share([
+    33	            'appName' => $config['name'],
+    34	        ]);
+    35	
+    36	        $this->postService = new PostService(
+    37	            $this->api
+    38	        );
+    39	
+    40	        $templateManager = new TemplateManager(
+    41	            __DIR__ . '/../templates',
+    42	            __DIR__ . '/../site/themes',
+    43	            __DIR__ . '/../storage/active-template'
+    44	        );
+    45	
+    46	        $templateInstaller = new TemplateInstaller(
+    47	            __DIR__ . '/../templates',
+    48	            __DIR__ . '/../site/themes'
+    49	        );
+    50	
+    51	        View::setTemplateManager(
+    52	            $templateManager
+    53	        );
+    54	
+    55	        $this->router = new Router();
+    56	
+    57	        $adminAuth = new AdminAuth(
+    58	            $this->api
+    59	        );
+    60	
+    61	        $adminController = new AdminController(
+    62	            $adminAuth,
+    63	            $this->postService,
+    64	            $templateManager,
+    65	            $templateInstaller,
+    66	            $this->api
+    67	        );
+    68	
+    69	        $this->router->get(
+    70	            '/admin/login',
+    71	            [$adminController, 'loginForm']
+    72	        );
+    73	
+    74	        $this->router->post(
+    75	            '/admin/login',
+    76	            [$adminController, 'login']
+    77	        );
+    78	
+    79	        $this->router->get(
+    80	            '/admin',
+    81	            [$adminController, 'dashboard']
+    82	        );
+    83	
+    84	        $this->router->get(
+    85	            '/admin/templates',
+    86	            [$adminController, 'templates']
+    87	        );
+    88	
+    89	        $this->router->post(
+    90	            '/admin/templates/install/{slug}',
+    91	            [$adminController, 'installTemplate']
+    92	        );
+    93	
+    94	        $this->router->post(
+    95	            '/admin/templates/activate/{slug}',
+    96	            [$adminController, 'activateTemplate']
+    97	        );
+    98	
+    99	        $this->router->post(
+   100	            '/admin/logout',
+   101	            [$adminController, 'logout']
+   102	        );
+   103	
+   104	        /*
+   105	         * Template installer.
+   106	         */
+   107	        $templateController = new TemplateController(
+   108	            $templateManager,
+   109	            $templateInstaller
+   110	        );
+   111	
+   112	        $this->router->get(
+   113	            '/templates',
+   114	            [$templateController, 'index']
+   115	        );
+   116	
+   117	        $this->router->post(
+   118	            '/templates/install/{slug}',
+   119	            [$templateController, 'install']
+   120	        );
+   121	
+   122	        $this->router->post(
+   123	            '/templates/activate/{slug}',
+   124	            [$templateController, 'activate']
+   125	        );
+   126	
+   127	
+   128	
+   129	        /*
+   130	         * Home controller.
+   131	         */
+   132	        $homeController = new HomeController(
+   133	            $this->postService,
+   134	            $templateManager
+   135	        );
+   136	
+   137	        /*
+   138	         * Home route.
+   139	         */
+   140	        $this->router->get(
+   141	            '/',
+   142	            [$homeController, 'index']
+   143	        );
+   144	
+   145	        /*
+   146	         * Article controller.
+   147	         */
+   148	        $articleController = new ArticleController(
+   149	            $this->postService
+   150	        );
+   151	
+   152	        /*
+   153	         * Article route.
+   154	         */
+   155	        $this->router->get(
+   156	            '/articles/{slug}',
+   157	            [$articleController, 'show']
+   158	        );
+   159	
+   160	
+   161	        /*
+   162	         * Template showcase routes.
+   163	         */
+   164	        $templateShowcaseController =
+   165	            new TemplateShowcaseController(
+   166	                $templateManager
+   167	            );
+   168	
+   169	        foreach (
+   170	            $templateManager->available()
+   171	            as $template
+   172	        ) {
+   173	            $showcase = $template['showcase'] ?? null;
+   174	            $slug = $template['slug'] ?? null;
+   175	
+   176	            if (
+   177	                !is_string($showcase) ||
+   178	                '' === $showcase ||
+   179	                !is_string($slug) ||
+   180	                '' === $slug
+   181	            ) {
+   182	                continue;
+   183	            }
+   184	
+   185	            $this->router->get(
+   186	                $showcase,
+   187	                static function () use (
+   188	                    $templateShowcaseController,
+   189	                    $slug
+   190	                ): void {
+   191	                    $templateShowcaseController->show(
+   192	                        [
+   193	                            'slug' => $slug,
+   194	                        ]
+   195	                    );
+   196	                }
+   197	            );
+   198	        }
+   199	
+   200	
+   201	    }
+   202	
+   203	    /**
+   204	     * Handle the current HTTP request.
+   205	     */
+   206	    public function run(): mixed
+   207	    {
+   208	        try {
+   209	            return $this->router->dispatch(
+   210	                $_SERVER['REQUEST_METHOD'] ?? 'GET',
+   211	                $_SERVER['REQUEST_URI'] ?? '/'
+   212	            );
+   213	        } catch (NotFoundException $exception) {
+   214	            http_response_code(404);
+   215	
+   216	            View::render(
+   217	                '404',
+   218	                [],
+   219	                'app'
+   220	            );
+   221	
+   222	            return null;
+   223	        }
+   224	    }
+   225	}

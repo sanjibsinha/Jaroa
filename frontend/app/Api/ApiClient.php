@@ -51,6 +51,31 @@ class ApiClient
     /**
      * Build and execute an HTTP request.
      */
+
+    public function put(
+        string $endpoint,
+        array $data = [],
+        array $headers = []
+    ): array {
+        return $this->request(
+            'PUT',
+            $endpoint,
+            $headers,
+            $data
+        );
+    }
+
+    public function delete(
+        string $endpoint,
+        array $headers = []
+    ): array {
+        return $this->request(
+            'DELETE',
+            $endpoint,
+            $headers
+        );
+    }
+
     private function request(
         string $method,
         string $endpoint,

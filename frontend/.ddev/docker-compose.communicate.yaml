@@ -1,0 +1,4 @@
+services:
+  web:
+    external_links:
+      - "ddev-router:jaroa-engine.ddev.site"

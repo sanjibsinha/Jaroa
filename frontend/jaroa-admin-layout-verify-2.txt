@@ -1,0 +1,11 @@
+===== ADMIN LOGIN HTML =====
+1:<!DOCTYPE html>
+2:<html lang="en">
+3:<head>
+14:        rel="stylesheet"
+15:        href="/assets/css/jaroa-admin.css"
+19:<body class="jaroa-admin-body">
+
+===== ADMIN DASHBOARD REDIRECT =====
+HTTP/2 302 
+location: /admin/login
