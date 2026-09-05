@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Admin\AdminAuth;
 use App\Api\ApiClient;
+use App\Controllers\AdminController;
 use App\Controllers\ArticleController;
 use App\Controllers\HomeController;
 use App\Exceptions\NotFoundException;
 use App\Routing\Router;
-use App\Services\AppService;
 use App\Services\PostService;
 use App\Controllers\TemplateController;
 use App\Controllers\TemplateShowcaseController;
@@ -19,8 +20,6 @@ class Application
     private ApiClient $api;
 
     private PostService $postService;
-
-    private AppService $appService;
 
     private Router $router;
 
@@ -35,10 +34,6 @@ class Application
         ]);
 
         $this->postService = new PostService(
-            $this->api
-        );
-
-        $this->appService = new AppService(
             $this->api
         );
 
@@ -58,6 +53,53 @@ class Application
         );
 
         $this->router = new Router();
+
+        $adminAuth = new AdminAuth(
+            $this->api
+        );
+
+        $adminController = new AdminController(
+            $adminAuth,
+            $this->postService,
+            $templateManager,
+            $templateInstaller,
+            $this->api
+        );
+
+        $this->router->get(
+            '/admin/login',
+            [$adminController, 'loginForm']
+        );
+
+        $this->router->post(
+            '/admin/login',
+            [$adminController, 'login']
+        );
+
+        $this->router->get(
+            '/admin',
+            [$adminController, 'dashboard']
+        );
+
+        $this->router->get(
+            '/admin/templates',
+            [$adminController, 'templates']
+        );
+
+        $this->router->post(
+            '/admin/templates/install/{slug}',
+            [$adminController, 'installTemplate']
+        );
+
+        $this->router->post(
+            '/admin/templates/activate/{slug}',
+            [$adminController, 'activateTemplate']
+        );
+
+        $this->router->post(
+            '/admin/logout',
+            [$adminController, 'logout']
+        );
 
         /*
          * Template installer.

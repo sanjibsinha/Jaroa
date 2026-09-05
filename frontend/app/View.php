@@ -36,11 +36,13 @@ class View
      */
     public static function render(
         string $view,
-        array $data = []
+        array $data = [],
+        string $layout = 'app'
     ): void {
         self::renderFile(
             self::viewPath($view),
-            $data
+            $data,
+            $layout
         );
     }
 
@@ -100,7 +102,8 @@ class View
      */
     private static function renderFile(
         string $viewPath,
-        array $data
+        array $data,
+        string $layout = 'app'
     ): void {
         extract(
             array_merge(
@@ -117,11 +120,14 @@ class View
         $content = ob_get_clean();
 
         $layoutPath =
-            __DIR__ . '/../views/layouts/app.php';
+            __DIR__ .
+            '/../views/layouts/' .
+            $layout .
+            '.php';
 
         if (!is_file($layoutPath)) {
             throw new RuntimeException(
-                'Application layout not found.'
+                "Layout not found: {$layout}"
             );
         }
 

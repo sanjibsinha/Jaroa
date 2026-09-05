@@ -17,21 +17,84 @@ class ApiClient
     /**
      * Send a GET request to the API.
      */
-    public function get(string $endpoint, array $query = []): array
-    {
+    public function get(
+        string $endpoint,
+        array $query = [],
+        array $headers = []
+    ): array {
+        return $this->request(
+            'GET',
+            $endpoint,
+            $query,
+            null,
+            $headers
+        );
+    }
+
+    /**
+     * Send a POST request with a JSON body.
+     */
+    public function post(
+        string $endpoint,
+        array $data = [],
+        array $headers = []
+    ): array {
+        return $this->request(
+            'POST',
+            $endpoint,
+            [],
+            $data,
+            $headers
+        );
+    }
+
+    /**
+     * Build and execute an HTTP request.
+     */
+    private function request(
+        string $method,
+        string $endpoint,
+        array $query = [],
+        ?array $json = null,
+        array $headers = []
+    ): array {
         $url = $this->buildUrl($endpoint, $query);
 
-        $context = stream_context_create([
+        $requestHeaders = [
+            'Accept: application/json',
+        ];
+
+        foreach ($headers as $name => $value) {
+            $requestHeaders[] = $name . ': ' . $value;
+        }
+
+        $options = [
             'http' => [
-                'method' => 'GET',
-
-                'header' => [
-                    'Accept: application/json',
-                ],
-
+                'method' => strtoupper($method),
+                'header' => $requestHeaders,
                 'ignore_errors' => true,
             ],
-        ]);
+        ];
+
+        if ($json !== null) {
+            $encoded = json_encode(
+                $json,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            );
+
+            if (false === $encoded) {
+                throw new RuntimeException(
+                    'Unable to encode API request JSON.'
+                );
+            }
+
+            $options['http']['header'][] =
+                'Content-Type: application/json';
+
+            $options['http']['content'] = $encoded;
+        }
+
+        $context = stream_context_create($options);
 
         $response = file_get_contents(
             $url,
@@ -62,7 +125,9 @@ class ApiClient
         }
 
         if ($statusCode < 200 || $statusCode >= 300) {
-            $message = $data['message']
+            $message =
+                $data['error']['message']
+                ?? $data['message']
                 ?? 'API request failed.';
 
             if (404 === $statusCode) {
@@ -99,7 +164,7 @@ class ApiClient
     }
 
     /**
-     * Extract the HTTP status code from the response headers.
+     * Extract the HTTP status code from response headers.
      */
     private function getStatusCode(array $headers): int
     {
